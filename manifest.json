@@ -1,0 +1,21 @@
+{
+  "name": "Conversaciones Poderosas",
+  "short_name": "Guardian",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#08111F",
+  "theme_color": "#F5C518",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.wepb",
+      "sizes": "512x512",
+      "type": "image/wepb"
+    }
+  ]
+}

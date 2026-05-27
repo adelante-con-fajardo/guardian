@@ -1,0 +1,837 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Conversaciones Poderosas · Fajardo 2026</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#F5C518">
+<link rel="apple-touch-icon" href="icon-192.png">
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap');
+:root{--Y:#F5C518;--B:#08111F;--BM:#132236;--BC:#1E3A5F;--W:#fff;--G:#1A7A4A;--T:rgba(255,255,255,.82);--T2:rgba(255,255,255,.5);--T3:rgba(255,255,255,.13);--fs:1.08rem;--fss:.92rem;--fsxs:.78rem;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:rgba(0,0,0,0);}
+html,body{height:100%;overflow-x:hidden;}
+body{font-family:'Barlow',sans-serif;background:var(--B);color:var(--W);font-size:var(--fs);-webkit-text-size-adjust:100%;touch-action:manipulation;}
+button{font-family:'Barlow',sans-serif;touch-action:manipulation;cursor:pointer;-webkit-appearance:none;border:none;}
+button:active,a:active{opacity:.7;}
+input,select,textarea{font-family:'Barlow',sans-serif;-webkit-appearance:none;border-radius:0;}
+.hdr{background:var(--BM);border-bottom:3px solid var(--Y);padding:.7rem 1rem;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:999;}
+.hdr-logo{height:30px;object-fit:contain;}
+.hdr-actions{display:flex;gap:.4rem;}
+.hbtn{background:rgba(255,255,255,.1);border:1px solid var(--T3);border-radius:6px;padding:.38rem .65rem;font-size:.85rem;color:var(--W);}
+.screen{display:none;max-width:480px;margin:0 auto;padding:1rem 1rem 5.5rem;}
+.screen.on{display:block;}
+.prog{display:flex;align-items:center;gap:.5rem;margin-bottom:1.25rem;}
+.prog-bar{flex:1;height:3px;background:var(--T3);border-radius:2px;overflow:hidden;}
+.prog-fill{height:100%;background:var(--Y);border-radius:2px;}
+.prog-txt{font-size:var(--fsxs);color:var(--T2);font-weight:700;white-space:nowrap;}
+.phase{display:inline-flex;align-items:center;gap:.35rem;font-size:var(--fsxs);font-weight:700;text-transform:uppercase;letter-spacing:.07em;padding:.22rem .7rem;border-radius:2px;margin-bottom:.85rem;}
+.ph-y{background:rgba(245,197,24,.15);color:var(--Y);}
+.ph-b{background:rgba(44,74,124,.4);color:#7BA7E0;}
+.ph-r{background:rgba(192,57,43,.18);color:#E87C75;}
+.ph-g{background:rgba(26,122,74,.2);color:#5EC48A;}
+.card{background:var(--BM);border-radius:12px;padding:1.1rem 1.2rem;margin-bottom:.9rem;border:1px solid var(--T3);}
+.card.hl{border-color:rgba(245,197,24,.35);background:rgba(245,197,24,.04);}
+.card.ok{border-color:rgba(26,122,74,.35);background:rgba(26,122,74,.04);}
+.card.warn{border-color:rgba(192,57,43,.3);background:rgba(192,57,43,.04);}
+.card-t{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:var(--fss);text-transform:uppercase;color:var(--Y);margin-bottom:.4rem;letter-spacing:.04em;}
+.card.ok .card-t{color:#5EC48A;}.card.warn .card-t{color:#E87C75;}
+.card p{font-size:var(--fs);color:var(--T);line-height:1.6;}
+.card p strong{color:var(--W);}
+.script{background:rgba(245,197,24,.08);border-left:3px solid var(--Y);padding:.7rem 1rem;border-radius:0 6px 6px 0;font-size:var(--fs);color:var(--W);font-style:italic;line-height:1.6;margin:.6rem 0;}
+.script.g{border-left-color:#27AE60;background:rgba(26,122,74,.08);}
+.script.r{border-left-color:#E74C3C;background:rgba(192,57,43,.08);}
+.btns{display:grid;gap:.55rem;margin-top:.9rem;}
+.btn{border-radius:10px;padding:.85rem 1rem;font-weight:700;font-size:var(--fs);text-transform:uppercase;letter-spacing:.03em;display:flex;align-items:center;justify-content:space-between;gap:.5rem;width:100%;line-height:1.2;border:none;}
+.btn.primary{background:var(--Y);color:var(--B);}
+.btn.secondary{background:var(--BM);color:var(--W);border:1px solid var(--T3);}
+.btn.success{background:rgba(26,122,74,.2);color:#5EC48A;border:1px solid rgba(26,122,74,.3);}
+.btn.danger{background:rgba(192,57,43,.12);color:#E87C75;border:1px solid rgba(192,57,43,.25);}
+.btn.green{background:var(--G);color:var(--W);}
+.btn.fy{background:var(--Y);color:var(--B);justify-content:center;font-size:1.1rem;padding:1rem;}
+.btn-arr{opacity:.45;font-size:.85rem;flex-shrink:0;}
+.btn-ico{font-size:1.15rem;flex-shrink:0;}
+.termo{display:grid;grid-template-columns:repeat(3,1fr);gap:.5rem;margin:.7rem 0;}
+.topt{border-radius:10px;padding:.9rem .4rem;text-align:center;cursor:pointer;border:2px solid transparent;touch-action:manipulation;}
+.thi{background:rgba(26,122,74,.2);border-color:rgba(26,122,74,.3);}
+.tmid{background:rgba(245,197,24,.15);border-color:rgba(245,197,24,.3);}
+.tlo{background:rgba(192,57,43,.15);border-color:rgba(192,57,43,.25);}
+.tnum{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.6rem;line-height:1;}
+.thi .tnum{color:#5EC48A;}.tmid .tnum{color:var(--Y);}.tlo .tnum{color:#E87C75;}
+.tlbl{font-size:var(--fsxs);font-weight:700;text-transform:uppercase;letter-spacing:.04em;margin-top:.25rem;line-height:1.3;}
+.thi .tlbl{color:#5EC48A;}.tmid .tlbl{color:var(--Y);}.tlo .tlbl{color:#E87C75;}
+.obj-tabs{display:flex;gap:.4rem;flex-wrap:wrap;margin:.7rem 0;}
+.otab{padding:.38rem .8rem;font-size:var(--fsxs);font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid var(--T3);color:var(--T2);background:transparent;touch-action:manipulation;}
+.otab.on{background:var(--Y);color:var(--B);border-color:var(--Y);}
+.opanel{display:none;}.opanel.on{display:block;}
+.datos-box{background:var(--BC);border-radius:10px;padding:1rem;margin:.85rem 0;border:1px solid rgba(245,197,24,.2);}
+.datos-t{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:var(--fss);text-transform:uppercase;color:var(--Y);margin-bottom:.6rem;letter-spacing:.04em;}
+.dato-row{display:flex;align-items:flex-start;gap:.65rem;margin-bottom:.5rem;font-size:var(--fss);color:var(--T);}
+.dato-row:last-child{margin-bottom:0;}
+.dato-ico{flex-shrink:0;font-size:1rem;margin-top:.05rem;}
+.dato-row strong{color:var(--W);}
+.cta-box{background:var(--Y);border-radius:14px;padding:1.1rem;margin:1rem 0;}
+.cta-t{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.2rem;text-transform:uppercase;color:var(--B);margin-bottom:.25rem;}
+.cta-s{font-size:var(--fss);color:rgba(0,0,0,.62);margin-bottom:.85rem;line-height:1.4;}
+.rec{background:var(--B);border-radius:8px;padding:.8rem .9rem;display:flex;align-items:center;gap:.75rem;cursor:pointer;touch-action:manipulation;border:1px solid transparent;margin-bottom:.45rem;}
+.rec:last-child{margin-bottom:0;}
+.rec-ico{font-size:1.35rem;flex-shrink:0;}
+.rec-t{font-weight:700;font-size:var(--fss);color:var(--W);}
+.rec-s{font-size:var(--fsxs);color:var(--T2);margin-top:.08rem;}
+.rec-arr{margin-left:auto;color:var(--Y);font-size:.85rem;flex-shrink:0;}
+.rec.ph{opacity:.45;}
+.rbadge{font-size:.6rem;font-weight:700;text-transform:uppercase;background:rgba(245,197,24,.2);color:var(--Y);padding:.1rem .35rem;border-radius:2px;margin-left:.4rem;}
+.ganchos{display:grid;grid-template-columns:1fr 1fr;gap:.55rem;margin:.9rem 0;}
+.gancho{background:var(--BM);border-radius:10px;padding:.9rem .75rem;text-align:center;cursor:pointer;border:1px solid var(--T3);touch-action:manipulation;}
+.gancho-ico{font-size:1.7rem;display:block;margin-bottom:.35rem;}
+.gancho-t{font-weight:700;font-size:var(--fss);color:var(--W);line-height:1.3;}
+.gancho-s{font-size:var(--fsxs);color:var(--T2);margin-top:.15rem;}
+.form-g{margin-bottom:.8rem;}
+.form-l{font-size:var(--fsxs);font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--T2);margin-bottom:.32rem;display:block;}
+.req{color:var(--Y);}
+.form-i{width:100%;background:var(--BM);border:1px solid var(--T3);border-radius:8px;padding:.65rem .9rem;font-size:var(--fs);color:var(--W);font-family:'Barlow',sans-serif;-webkit-appearance:none;appearance:none;}
+.form-i:focus{outline:none;border-color:var(--Y);}
+.form-i::placeholder{color:var(--T2);}
+.form-i.auto{background:rgba(245,197,24,.06);border-color:rgba(245,197,24,.3);color:var(--Y);font-weight:600;}
+select.form-i{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath d='M1 1l5 5 5-5' stroke='%23F5C518' stroke-width='2' fill='none'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right .75rem center;padding-right:2rem;}
+select.form-i option{background:#132236;}
+.muni-wrap{position:relative;}
+.muni-results{position:absolute;top:100%;left:0;right:0;background:var(--BM);border:1px solid var(--Y);border-top:none;border-radius:0 0 8px 8px;max-height:170px;overflow-y:auto;z-index:9999;display:none;}
+.muni-results.show{display:block;}
+.muni-opt{padding:.55rem .9rem;font-size:var(--fs);color:var(--T);cursor:pointer;border-bottom:1px solid var(--T3);touch-action:manipulation;}
+.muni-opt:last-child{border-bottom:none;}
+.stars{display:flex;gap:.45rem;margin:.3rem 0;}
+.star{font-size:1.8rem;cursor:pointer;color:var(--T3);touch-action:manipulation;user-select:none;}
+.star.on{color:var(--Y);}
+.back{display:inline-flex;align-items:center;gap:.35rem;font-size:var(--fss);color:var(--T2);background:none;border:none;padding:0;margin-bottom:1rem;touch-action:manipulation;}
+.fab{position:fixed;bottom:72px;left:50%;transform:translateX(-50%);background:var(--BC);border:2px solid var(--Y);color:var(--Y);font-weight:700;font-size:var(--fsxs);text-transform:uppercase;letter-spacing:.05em;padding:.45rem 1.1rem;border-radius:20px;display:flex;align-items:center;gap:.4rem;box-shadow:0 4px 20px rgba(0,0,0,.5);z-index:998;touch-action:manipulation;white-space:nowrap;}
+.fab.hidden{display:none;}
+.success-wrap{text-align:center;padding:2rem 1rem;}
+.s-ico{font-size:4rem;display:block;margin-bottom:.75rem;}
+.s-title{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2rem;text-transform:uppercase;color:var(--Y);margin-bottom:.5rem;}
+.s-sub{font-size:var(--fs);color:var(--T);line-height:1.6;margin-bottom:1.5rem;}
+.counter{background:var(--BM);border-radius:12px;padding:1rem;text-align:center;margin:.75rem 0;border:1px solid var(--T3);}
+.c-num{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:3rem;color:var(--Y);line-height:1;}
+.c-lbl{font-size:var(--fsxs);color:var(--T2);text-transform:uppercase;letter-spacing:.06em;margin-top:.2rem;}
+.contact-item{background:var(--BM);border-radius:8px;padding:.9rem 1rem;margin-bottom:.5rem;border-left:3px solid var(--T3);}
+.contact-item.hot{border-left-color:var(--Y);}
+.contact-item.warm{border-left-color:#E87C75;}
+.c-name{font-weight:600;font-size:var(--fs);color:var(--W);}
+.c-meta{font-size:var(--fsxs);color:var(--T2);margin-top:.1rem;}
+.c-tags{display:flex;gap:.3rem;flex-wrap:wrap;margin-top:.35rem;}
+.ctag{font-size:.65rem;font-weight:700;text-transform:uppercase;padding:.12rem .4rem;border-radius:2px;}
+.ctag.y{background:rgba(245,197,24,.2);color:var(--Y);}
+.ctag.g{background:rgba(26,122,74,.2);color:#5EC48A;}
+.ctag.r{background:rgba(192,57,43,.2);color:#E87C75;}
+.banner{background:var(--Y);border-radius:12px;padding:1rem 1.1rem;margin-bottom:1rem;}
+.banner p{font-size:var(--fss);color:var(--B);line-height:1.5;font-weight:500;font-style:italic;}
+.banner-src{font-size:var(--fsxs);font-weight:700;color:rgba(0,0,0,.45);margin-top:.3rem;}
+.agenda{background:var(--BM);border-radius:10px;padding:.9rem 1rem;margin-bottom:1rem;border:1px solid var(--T3);}
+.agenda-t{font-family:'Barlow Condensed',sans-serif;font-weight:700;font-size:var(--fss);text-transform:uppercase;color:var(--Y);margin-bottom:.6rem;}
+.ag-row{display:flex;gap:.6rem;font-size:var(--fss);color:var(--T);margin-bottom:.4rem;align-items:flex-start;}
+.ag-row:last-child{margin-bottom:0;}
+.ag-dia{color:var(--Y);font-weight:700;white-space:nowrap;min-width:52px;flex-shrink:0;}
+.ses-box{background:rgba(245,197,24,.08);border:1px solid rgba(245,197,24,.3);border-radius:10px;padding:.85rem 1rem;margin-bottom:1rem;display:flex;align-items:center;justify-content:space-between;gap:.75rem;}
+.ses-info{font-size:var(--fss);color:var(--T);}
+.ses-name{color:var(--Y);display:block;font-size:var(--fs);font-weight:700;}
+.ses-change{font-size:var(--fsxs);font-weight:700;text-transform:uppercase;color:var(--T2);background:none;border:none;text-decoration:underline;touch-action:manipulation;}
+.setup-wrap{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:85vh;text-align:center;padding:2rem 1.5rem;}
+.setup-logo{height:54px;margin-bottom:1.5rem;object-fit:contain;}
+.setup-t{font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:2rem;text-transform:uppercase;color:var(--Y);margin-bottom:.5rem;}
+.setup-sub{font-size:var(--fs);color:var(--T);margin-bottom:1.5rem;line-height:1.5;}
+.setup-form{width:100%;max-width:340px;text-align:left;}
+.extra-toggle{font-size:var(--fss);padding:.6rem 1rem;margin-bottom:.75rem;}
+.bnav{position:fixed;bottom:0;left:0;right:0;background:var(--BM);border-top:1px solid var(--T3);display:flex;padding:.55rem .75rem;gap:.4rem;z-index:997;max-width:480px;margin:0 auto;}
+.bn{flex:1;padding:.5rem .25rem;border-radius:6px;font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.03em;border:none;text-align:center;touch-action:manipulation;line-height:1.3;}
+.bn.on{background:var(--Y);color:var(--B);}
+.bn.off{background:transparent;color:var(--T2);border:1px solid var(--T3);}
+.bn.conv-btn{background:var(--BC);color:var(--Y);border:2px solid var(--Y);}
+#toast{position:fixed;bottom:85px;left:50%;transform:translateX(-50%);background:var(--Y);color:var(--B);font-weight:700;font-size:var(--fss);padding:.45rem 1.1rem;border-radius:20px;z-index:9999;white-space:nowrap;pointer-events:none;opacity:0;transition:opacity .3s;}
+.hr{border:none;border-top:1px solid var(--T3);margin:1rem 0;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <img class="hdr-logo" src="https://www.sergiofajardo.com/logos/fajardo-logo.png" alt="Fajardo Presidente" onerror="this.outerHTML='<span style=\'font-family:Barlow Condensed,sans-serif;font-weight:900;font-size:.95rem;color:#F5C518;text-transform:uppercase\'>FAJARDO PRESIDENTE</span>'">
+  <div class="hdr-actions">
+    <button class="hbtn" onclick="showScreen('contactos')">📋</button>
+    <button class="hbtn" onclick="showScreen('recursos-all')">🎯</button>
+  </div>
+</div>
+
+<button class="fab hidden" id="fab" onclick="goto('captura')">➕ Agregar contacto</button>
+
+<div class="screen on" id="sc-setup">
+  <div class="setup-wrap">
+    <img class="setup-logo" src="https://www.sergiofajardo.com/logos/fajardo-logo.png" alt="Fajardo" onerror="this.style.display='none'">
+    <div class="setup-t">Conversaciones<br>Poderosas</div>
+    <div class="setup-sub">Inicia sesión e ingresa tu zona de trabajo para comenzar.</div>
+    <div class="setup-form">
+      <div class="form-g">
+        <label class="form-l">Correo Electrónico</label>
+        <input class="form-i" id="inp-email" type="email" placeholder="voluntario@fajardo.com">
+      </div>
+      <div class="form-g">
+        <label class="form-l">Contraseña</label>
+        <input class="form-i" id="inp-pass" type="password" placeholder="******">
+      </div>
+      <div class="hr"></div>
+      <div class="form-g">
+        <label class="form-l">Tu nombre</label>
+        <input class="form-i" id="inp-vol" type="text" placeholder="Tu nombre completo">
+      </div>
+      <div class="form-g">
+        <label class="form-l">Municipio de trabajo</label>
+        <div class="muni-wrap">
+          <input class="form-i" id="inp-muni-s" type="text" placeholder="Escribe para buscar..." oninput="bMuni(this.value,'muni-res-s')" autocomplete="off">
+          <div class="muni-results" id="muni-res-s"></div>
+        </div>
+      </div>
+      <div class="form-g">
+        <label class="form-l">Barrio / Sector <span style="color:var(--T2);font-weight:400;text-transform:none">(opcional)</span></label>
+        <input class="form-i" id="inp-barrio-s" type="text" placeholder="Ej: El Poblado, Kennedy...">
+      </div>
+      <div class="btns" style="margin-top:.5rem; display: grid; grid-template-columns: 1fr 1fr; gap: .5rem;">
+        <button class="btn secondary" style="justify-content:center; padding: 1rem 0.5rem;" onclick="doRegister()">Crear Cuenta</button>
+        <button class="btn fy" style="justify-content:center; padding: 1rem 0.5rem;" onclick="doSetup()">Iniciar Sesión</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="sc-inicio">
+  <div class="counter"><div class="c-num" id="cnt-main">0</div><div class="c-lbl">conversaciones hoy</div></div>
+  <div class="ses-box">
+    <div class="ses-info"><span class="ses-name" id="ses-nom">Voluntario</span><span id="ses-zona">Sin zona</span></div>
+    <button class="ses-change" onclick="showScreen('setup')">Cambiar</button>
+  </div>
+  <div class="banner"><p>"Si todas las personas que dicen 'me gusta Fajardo pero no va a llegar' realmente votaran por él este domingo, estaríamos en segunda vuelta."</p><div class="banner-src">Caja de Mensajes Oficial · Fajardo 2026</div></div>
+  <div class="btns">
+    <button class="btn secondary" onclick="showScreen('recursos-all');setBnav('rec')"><span>🎯 Recursos para compartir</span><span class="btn-arr">→</span></button>
+    <button class="btn secondary" onclick="showScreen('contactos');setBnav('cont')"><span>📋 Mis contactos</span><span class="btn-arr">→</span></button>
+  </div>
+  <div class="agenda">
+    <div class="agenda-t">📅 Eventos clave</div>
+    <div class="ag-row"><span class="ag-dia">Jue 28</span><span>👩 Zoom Mujeres con Edna · 7:30pm — <strong>invita tus contactas</strong></span></div>
+    <div class="ag-row"><span class="ag-dia">Vie 29</span><span>🔴 Debate Caracol · 6:30pm — <strong>avisa a todos</strong></span></div>
+    <div class="ag-row"><span class="ag-dia">Sáb 30</span><span>🎙️ Encuentro Voluntarios con Fajardo · 7pm</span></div>
+    <div class="ag-row"><span class="ag-dia">Dom 31</span><span>🗳️ Elecciones — acompaña a tus contactos</span></div>
+  </div>
+  <div class="card"><div class="card-t">Reglas de oro</div><p>Escuchas <strong>70%</strong> · Hablas <strong>30%</strong> · +2 min = conversación que convierte · Meta: <strong>1×3</strong></p></div>
+</div>
+
+<div class="screen" id="sc-s1">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:16%"></div></div><span class="prog-txt">1/6</span></div>
+  <div class="phase ph-y">🎙️ Apertura</div>
+  <div class="card hl"><div class="card-t">Pregunta 1 — Filtro rápido</div><div class="script">"¿Ya tiene claro su voto para el domingo?"</div><p style="font-size:var(--fsxs);color:var(--T2);margin-top:.4rem">Espera. Escucha. No interrumpas.</p></div>
+  <div class="btns">
+    <button class="btn success" onclick="goto('s1b')"><span><span class="btn-ico">🟡</span> Más o menos / No sé todavía</span><span class="btn-arr">→</span></button>
+    <button class="btn danger" onclick="goto('salida')"><span><span class="btn-ico">🔴</span> Sí, ya decidió</span><span class="btn-arr">→</span></button>
+  </div>
+</div>
+
+<div class="screen" id="sc-s1b">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:32%"></div></div><span class="prog-txt">2/6</span></div>
+  <div class="phase ph-b">🔍 Diagnóstico</div>
+  <div class="card"><div class="card-t">Pregunta 2 — Voto pasado</div><div class="script">"¿Y en segunda vuelta 2022 votó por Petro, por Rodolfo, o no votó?"</div></div>
+  <div class="btns">
+    <button class="btn secondary" onclick="goto('s2a');setP('Anti-Cepeda Estratégico')"><span><span class="btn-ico">⚡</span> Rodolfo / No votó / Derecha</span><span class="btn-arr">→</span></button>
+    <button class="btn secondary" onclick="goto('s2b');setP('Progresista')"><span><span class="btn-ico">✊</span> Petro</span><span class="btn-arr">→</span></button>
+    <button class="btn secondary" onclick="goto('s2c');setP('Abstencionista')"><span><span class="btn-ico">😶</span> No recuerda / Primera vez</span><span class="btn-arr">→</span></button>
+  </div>
+</div>
+
+<div class="screen" id="sc-s2a">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:48%"></div></div><span class="prog-txt">3/6</span></div>
+  <div class="phase ph-b">🔍 Confirmar duda</div>
+  <div class="card"><div class="card-t">Pregunta 3 — ¿Entre quién duda?</div><div class="script">"¿Y hoy entre quién está dudando?"</div></div>
+  <div class="btns">
+    <button class="btn secondary" onclick="goto('arg-ab');setP('Anti-Cepeda · vs Abelardo')"><span><span class="btn-ico">💪</span> Entre Fajardo y Abelardo</span><span class="btn-arr">→</span></button>
+    <button class="btn secondary" onclick="goto('arg-pa');setP('Anti-Cepeda · vs Paloma')"><span><span class="btn-ico">🕊️</span> Entre Fajardo y Paloma</span><span class="btn-arr">→</span></button>
+    <button class="btn secondary" onclick="goto('arg-via');setP('Anti-Cepeda · Viabilidad')"><span><span class="btn-ico">📊</span> "El que le gane a Cepeda"</span><span class="btn-arr">→</span></button>
+    <button class="btn success" onclick="goto('cierre-d');setP('Ya simpatiza con Fajardo')"><span><span class="btn-ico">✅</span> Solo menciona a Fajardo</span><span class="btn-arr">→</span></button>
+  </div>
+</div>
+
+<div class="screen" id="sc-s2b">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:48%"></div></div><span class="prog-txt">3/6</span></div>
+  <div class="phase ph-b">🔍 Confirmar duda</div>
+  <div class="card"><div class="card-t">Pregunta 3 — ¿Entre quién duda?</div><div class="script">"¿Está entre Fajardo y Cepeda, o ya descartó a Cepeda?"</div></div>
+  <div class="btns">
+    <button class="btn secondary" onclick="goto('arg-cj');setP('Progresista · Joven idealista')"><span><span class="btn-ico">🎓</span> Joven idealista — le atrae el cambio</span><span class="btn-arr">→</span></button>
+    <button class="btn secondary" onclick="goto('arg-cd');setP('Progresista · Ex-petrista')"><span><span class="btn-ico">😔</span> Votó Petro y está decepcionado</span><span class="btn-arr">→</span></button>
+  </div>
+</div>
+
+<div class="screen" id="sc-s2c">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:48%"></div></div><span class="prog-txt">3/6</span></div>
+  <div class="phase ph-b">🔍 Confirmar perfil</div>
+  <div class="card"><div class="card-t">¿Cuál describe mejor?</div></div>
+  <div class="btns">
+    <button class="btn secondary" onclick="goto('arg-am');setP('Abstencionista · Mujer pragmática')"><span><span class="btn-ico">👩</span> Mujer pragmática — cansada del sistema</span><span class="btn-arr">→</span></button>
+    <button class="btn secondary" onclick="goto('arg-aj');setP('Abstencionista · Joven')"><span><span class="btn-ico">📱</span> Joven desconectado — primera vez</span><span class="btn-arr">→</span></button>
+    <button class="btn secondary" onclick="goto('arg-amay');setP('Abstencionista · Adulto resignado')"><span><span class="btn-ico">🧓</span> Adulto resignado — ya no cree</span><span class="btn-arr">→</span></button>
+  </div>
+</div>
+
+<div class="screen" id="sc-arg-ab">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:64%"></div></div><span class="prog-txt">4/6</span></div>
+  <div class="phase ph-r">⚡ Anti-Cepeda · vs Abelardo</div>
+  <div class="card warn"><p><strong>❌ No uses:</strong> "Las megacárceles no funcionan." Usa Antioquia/Bukele.</p></div>
+  <div class="card"><div class="card-t">El argumento</div><div class="script">"¿Usted admira lo que hizo Bukele en El Salvador? Fajardo ya lo hizo en Antioquia — y sin romper la Constitución."</div></div>
+  <div class="datos-box"><div class="datos-t">📊 Datos verificables</div>
+    <div class="dato-row"><span class="dato-ico">👥</span><span><strong>Antioquia: 6.8M hab.</strong> vs El Salvador: 6.5M</span></div>
+    <div class="dato-row"><span class="dato-ico">📉</span><span>Medellín: <strong>381 → 52</strong> homicidios/100k — reducción del 86%</span></div>
+    <div class="dato-row"><span class="dato-ico">🏫</span><span><strong>5 Parques Biblioteca + 10 colegios</strong> en comunas más violentas</span></div>
+    <div class="dato-row"><span class="dato-ico">⚖️</span><span>Bukele <strong>suspendió la Constitución.</strong> Fajardo lo hizo dentro de la ley</span></div>
+    <div class="dato-row"><span class="dato-ico">📋</span><span>Abelardo <strong>nunca ha gobernado</strong> ni un municipio</span></div>
+  </div>
+  <div class="card"><div class="card-t">El cierre</div><div class="script">"Abelardo quiere ser Bukele. Fajardo ya fue mejor que Bukele — sin quitarle derechos a nadie. ¿Cuál prefiere?"</div></div>
+  <div style="font-size:var(--fsxs);color:var(--T2);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:.85rem 0 .4rem">Objeciones frecuentes</div>
+  <div class="obj-tabs">
+    <button class="otab on" onclick="showObj('ob-ab1',this)">No va a ganar</button>
+    <button class="otab" onclick="showObj('ob-ab2',this)">Es tibio</button>
+    <button class="otab" onclick="showObj('ob-ab3',this)">Don Berna</button>
+  </div>
+  <div class="opanel on" id="ob-ab1"><div class="script">"Hace 4 años todas las encuestas daban Petro vs Fico. Ganó Rodolfo. Hoy hay 7 millones de indecisos. Si todos los que piensan como usted votan con convicción, las encuestas se equivocan. Su voto no es fe — es matemática."</div></div>
+  <div class="opanel" id="ob-ab2"><div class="script">"¿Tibio el que redujo la violencia en Medellín un 86% sin disparar una bala? Confundimos fuerza con gritería. Fajardo no grita — ejecuta."</div></div>
+  <div class="opanel" id="ob-ab3"><div class="script">"La 'donbernabilidad' nunca fue probada judicialmente. Fajardo tiene cero investigaciones de la Fiscalía, Contraloría y Procuraduría en 20 años. Si hubiera algo real, habría aparecido."</div></div>
+  <div class="btns" style="margin-top:1rem"><button class="btn primary" onclick="goto('cta-comp')">📲 Compartir recurso →</button></div>
+</div>
+
+<div class="screen" id="sc-arg-pa">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:64%"></div></div><span class="prog-txt">4/6</span></div>
+  <div class="phase ph-r">⚡ Anti-Cepeda · vs Paloma</div>
+  <div class="card warn"><p><strong>❌ No ataques a Paloma.</strong> Ataca la lógica de votarla para frenar a Cepeda.</p></div>
+  <div class="card"><div class="card-t">El argumento histórico</div>
+    <div class="script">"¿Sabe por qué Petro está en el poder? Por Uribe. Uribe puso a Duque, un aprendiz que no supo manejar el estallido social. Ese estallido empoderó a la izquierda radical, y Petro ganó."</div>
+    <div class="script">"Si llega Paloma, la izquierda no va a ver una presidenta de centro-derecha — va a ver a la hija política de Uribe. Y eso solo puede terminar de una manera: otro estallido. Para todos."</div>
+  </div>
+  <div class="datos-box"><div class="datos-t">📊 El dato que lo dice todo</div>
+    <div class="dato-row"><span class="dato-ico">❌</span><span>"¿Por quién nunca votaría?" — <strong>16% respondió Paloma</strong></span></div>
+    <div class="dato-row"><span class="dato-ico">✅</span><span>Fajardo: solo <strong>2.8% de rechazo</strong> — el más bajo de todos</span></div>
+    <div class="dato-row"><span class="dato-ico">📊</span><span>Paloma le gana a Cepeda por solo <strong>1 punto</strong> — margen que se evapora</span></div>
+    <div class="dato-row"><span class="dato-ico">🧮</span><span>Fajardo puede sumar votos del centro que <strong>Paloma nunca puede atraer</strong></span></div>
+  </div>
+  <div class="card"><div class="card-t">El cierre</div><div class="script">"Votar por Paloma para frenar a Cepeda es un error estratégico. Ya vivimos esa película con Duque. ¿La queremos repetir?"</div></div>
+  <div style="font-size:var(--fsxs);color:var(--T2);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:.85rem 0 .4rem">Objeciones frecuentes</div>
+  <div class="obj-tabs">
+    <button class="otab on" onclick="showObj('ob-pa1',this)">No va a ganar</button>
+    <button class="otab" onclick="showObj('ob-pa2',this)">¿Se unió con Paloma?</button>
+    <button class="otab" onclick="showObj('ob-pa3',this)">Encuestas</button>
+  </div>
+  <div class="opanel on" id="ob-pa1"><div class="script">"7 millones de indecisos no aparecen en las encuestas. El 72% contactado por Invamer se negó a contestar. Los indecisos no contestan — pero sí votan."</div></div>
+  <div class="opanel" id="ob-pa2"><div class="script">"Tomarse un tinto con alguien no es una alianza. Fajardo habla con todo el mundo — eso es lo que Colombia necesita. Él lo dijo claro: no venimos a escoger trinchera."</div></div>
+  <div class="opanel" id="ob-pa3"><div class="script">"Las encuestas dicen 3-14% de indecisos. Los microdatos reales dicen 28%. La diferencia: el 72% de los contactados se negó a responder — y esos son los que buscamos."</div></div>
+  <div class="btns" style="margin-top:1rem"><button class="btn primary" onclick="goto('cta-comp')">📲 Compartir recurso →</button></div>
+</div>
+
+<div class="screen" id="sc-arg-via">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:64%"></div></div><span class="prog-txt">4/6</span></div>
+  <div class="phase ph-r">⚡ Anti-Cepeda · Viabilidad</div>
+  <div class="card hl"><div class="card-t">El argumento</div><div class="script">"Si todas las personas que dicen 'me gusta Fajardo pero no va a llegar' realmente votaran por él, estaríamos en segunda vuelta. Somos una fuerza silenciosa — el problema es que nadie da el primer paso."</div></div>
+  <div class="datos-box"><div class="datos-t">📊 Los números reales</div>
+    <div class="dato-row"><span class="dato-ico">🗳️</span><span><strong>28% de indecisos</strong> — casi 7 millones sin dueño</span></div>
+    <div class="dato-row"><span class="dato-ico">🇨🇴</span><span>2022: encuestas daban <strong>0 chances a Rodolfo.</strong> Llegó a segunda vuelta</span></div>
+    <div class="dato-row"><span class="dato-ico">🇫🇷</span><span>Francia 2017: Macron era <strong>imposible.</strong> Ganó con 66%</span></div>
+    <div class="dato-row"><span class="dato-ico">❌</span><span>Fajardo: <strong>2.8% de rechazo</strong> — puede sumar todos los votos del centro</span></div>
+  </div>
+  <div class="card"><div class="card-t">El cierre</div><div class="script">"Su voto no es fe — es matemática. Si todos votan por miedo, ganan los mismos de siempre."</div></div>
+  <div class="btns" style="margin-top:1rem"><button class="btn primary" onclick="goto('cta-comp')">📲 Compartir recurso →</button></div>
+</div>
+
+<div class="screen" id="sc-arg-cj">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:64%"></div></div><span class="prog-txt">4/6</span></div>
+  <div class="phase ph-r">✊ Progresista · Joven idealista</div>
+  <div class="card warn"><p><strong>❌ No ataques a Cepeda ideológicamente.</strong> Solo compara discurso vs ejecución.</p></div>
+  <div class="card"><div class="card-t">Apertura — pregunta primero</div>
+    <div class="script">"¿Cuál es el cambio que tú quieres ver? Dime uno concreto."</div>
+    <p style="font-size:var(--fsxs);color:var(--T2);margin-top:.35rem">Escucha. Luego:</p>
+    <div class="script">"Fajardo ya lo hizo. En los barrios más pobres y violentos de Medellín construyó Parques Biblioteca, colegios de calidad — para los que estaban en la frontera de la criminalidad y necesitaban una razón para no cruzarla."</div>
+  </div>
+  <div class="datos-box"><div class="datos-t">📊 Transformación real</div>
+    <div class="dato-row"><span class="dato-ico">📚</span><span><strong>5 Parques Biblioteca</strong> en comunas 1-13</span></div>
+    <div class="dato-row"><span class="dato-ico">🏫</span><span><strong>10 colegios nuevos + 132 mejorados</strong> + 31.761 cupos</span></div>
+    <div class="dato-row"><span class="dato-ico">🌍</span><span><strong>Ciudad más innovadora del mundo</strong> — Premio Lee Kuan Yew 2016</span></div>
+    <div class="dato-row"><span class="dato-ico">📉</span><span>Violencia: <strong>-86%</strong> sin estado de excepción</span></div>
+  </div>
+  <div class="card"><div class="card-t">El cierre</div><div class="script">"Cepeda tiene el discurso que te emociona. Fajardo tiene los resultados que te cambian la vida. ¿Cuál quieres que gobierne?"</div></div>
+  <div class="btns" style="margin-top:1rem"><button class="btn primary" onclick="goto('cta-comp')">📲 Compartir recurso →</button></div>
+</div>
+
+<div class="screen" id="sc-arg-cd">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:64%"></div></div><span class="prog-txt">4/6</span></div>
+  <div class="phase ph-r">✊ Progresista · Ex-petrista</div>
+  <div class="card warn"><p><strong>❌ No digas que se equivocó.</strong> Valida su intención — separa la intención del resultado.</p></div>
+  <div class="card"><div class="card-t">Empatía primero</div>
+    <div class="script">"Usted no votó por Petro — votó por cambio. Por salud, educación, equidad. Eso es completamente válido. El problema no fue el deseo — fue que el instrumento no tenía la honestidad de ejecutarlo."</div>
+  </div>
+  <div class="datos-box"><div class="datos-t">📊 Lo que pasó realmente</div>
+    <div class="dato-row"><span class="dato-ico">💸</span><span>Corrupción Petro: UNGRD, chatarreras — <strong>recursos de los pobres desviados</strong></span></div>
+    <div class="dato-row"><span class="dato-ico">🔒</span><span>Paz Total = <strong>paz para criminales.</strong> ELN y disidencias crecieron</span></div>
+    <div class="dato-row"><span class="dato-ico">⚖️</span><span>Fajardo: <strong>cero investigaciones</strong> en 20 años. Sus recursos llegaron completos</span></div>
+    <div class="dato-row"><span class="dato-ico">🏫</span><span>Con plata sin corrupción: <strong>5 Parques Biblioteca + 10 colegios</strong> en las comunas más pobres</span></div>
+  </div>
+  <div class="card"><div class="card-t">El cierre</div><div class="script">"Para transformación social necesitas recursos. Para recursos necesitas combatir la corrupción. Cepeda es Petro con otro nombre — el mismo discurso, ningún resultado ejecutivo."</div></div>
+  <div style="font-size:var(--fsxs);color:var(--T2);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin:.85rem 0 .4rem">Objeciones frecuentes</div>
+  <div class="obj-tabs">
+    <button class="otab on" onclick="showObj('ob-dc1',this)">Es uribista</button>
+    <button class="otab" onclick="showObj('ob-dc2',this)">Solo Antioquia</button>
+    <button class="otab" onclick="showObj('ob-dc3',this)">Hidroituango</button>
+  </div>
+  <div class="opanel on" id="ob-dc1"><div class="script">"Fajardo fue el primero en oponerse a Uribe cuando era impopular. Sus propuestas de salud y educación vienen de lo que ejecutó en Medellín. Que critique al gobierno actual no lo hace uribista — lo hace honesto."</div></div>
+  <div class="opanel" id="ob-dc2"><div class="script">"Antioquia tiene 6.8M de habitantes — más que muchos países. Su propuesta es nacional. El modelo de Medellín ya lo estudian en Harvard y la ONU como replicable en cualquier ciudad."</div></div>
+  <div class="opanel" id="ob-dc3"><div class="script">"Fajardo fue Gobernador entre 2012 y 2015. Las fallas de Hidroituango ocurrieron en 2018 bajo otro gobierno. Los hechos tienen fechas — y las fechas no mienten. Puede verificarlo."</div></div>
+  <div class="btns" style="margin-top:1rem"><button class="btn primary" onclick="goto('cta-comp')">📲 Compartir recurso →</button></div>
+</div>
+
+<div class="screen" id="sc-arg-am">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:64%"></div></div><span class="prog-txt">4/6</span></div>
+  <div class="phase ph-r">😶 Abstencionista · Mujer pragmática</div>
+  <div class="card warn"><p><strong>❌ Nunca empieces con política.</strong> Empieza con su vida cotidiana.</p></div>
+  <div class="card"><div class="card-t">La apertura</div>
+    <div class="script">"¿Cómo está la situación por acá? ¿La EPS le está respondiendo? ¿La seguridad del barrio cómo está?"</div>
+    <p style="font-size:var(--fsxs);color:var(--T2);margin-top:.35rem">Escucha. Siempre tiene algo concreto. Luego:</p>
+    <div class="script">"Eso no cambia solo. Alguien tiene que administrar bien para que cambie. Hay uno que ya lo demostró — con resultados que puede verificar."</div>
+  </div>
+  <div class="card"><div class="card-t">El cierre</div><div class="script">"No le pido que se emocione. Le pido que piense en su EPS, la seguridad de su barrio, sus hijos. Eso es lo que está en juego el domingo. Son 3 minutos."</div></div>
+  <div class="btns" style="margin-top:.85rem"><button class="btn primary" onclick="goto('ganchos')">Siguiente → Ofrecer ayuda</button></div>
+</div>
+
+<div class="screen" id="sc-arg-aj">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:64%"></div></div><span class="prog-txt">4/6</span></div>
+  <div class="phase ph-r">😶 Abstencionista · Joven</div>
+  <div class="card warn"><p><strong>❌ Nunca digas</strong> "institucionalidad". Habla su idioma.</p></div>
+  <div class="card"><div class="card-t">La apertura</div>
+    <div class="script">"¿Tú ya vas a votar el domingo?" → Si dice no: "¿Y si hubiera uno que ya demostró que sí puede cambiar las cosas — lo considerarías?"</div>
+    <div class="script">"Fajardo tomó Medellín — la ciudad más violenta del planeta — y la convirtió en referente mundial. Ganó el premio a la ciudad más innovadora sobre Nueva York y Tel Aviv. Puedes googlear eso ahora mismo."</div>
+  </div>
+  <div class="card"><div class="card-t">El cierre</div><div class="script">"¿Quieres ser parte de la sorpresa del domingo o quedarte viendo el partido desde afuera?"</div></div>
+  <div class="btns" style="margin-top:.85rem"><button class="btn primary" onclick="goto('ganchos')">Siguiente → Ofrecer ayuda</button></div>
+</div>
+
+<div class="screen" id="sc-arg-amay">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:64%"></div></div><span class="prog-txt">4/6</span></div>
+  <div class="phase ph-r">😶 Abstencionista · Adulto resignado</div>
+  <div class="card"><div class="card-t">Valida primero</div>
+    <div class="script">"Tiene razón en estar cansado. Yo también lo estaría."</div>
+    <p style="font-size:var(--fsxs);color:var(--T2);margin-top:.35rem">Deja que hable. Luego:</p>
+    <div class="script">"Pero si usted no vota, ¿quién decide por usted? Alguien va a ganar el domingo — y ese alguien va a manejar su EPS, su pensión y la seguridad de su barrio por 4 años. La abstención no es neutralidad — es regalarle su voto al que usted menos quiere."</div>
+  </div>
+  <div class="card"><div class="card-t">El cierre</div><div class="script">"Hay uno que gobernó con las manos limpias, que transformó Medellín cuando nadie creía, con cero investigaciones en 20 años. No le pido fe. Le pido que no le regale su voto a quien no se lo merece."</div></div>
+  <div class="btns" style="margin-top:.85rem"><button class="btn primary" onclick="goto('ganchos')">Siguiente → Ofrecer ayuda</button></div>
+</div>
+
+<div class="screen" id="sc-cierre-d">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div><span class="prog-txt">5/6</span></div>
+  <div class="phase ph-g">✅ Ya simpatiza — activar 1×3</div>
+  <div class="card ok"><div class="card-t">¡Ya es nuestro! Actívalo como multiplicador</div>
+    <div class="script g">"¡Qué bueno! Le pido un favor: busque 3 personas en su WhatsApp que estén dudando. Un voto trae otro. ¿Le comparto algo que puede enviarles ahora mismo?"</div>
+  </div>
+  <div class="btns">
+    <button class="btn primary" onclick="goto('cta-comp')">📲 Compartir recurso ahora</button>
+    <button class="btn green" onclick="goto('captura')">📝 Registrar y continuar</button>
+  </div>
+</div>
+
+<div class="screen" id="sc-ganchos">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div><span class="prog-txt">5/6</span></div>
+  <div class="phase ph-g">🎁 Ofrecer ayuda concreta</div>
+  <div class="card hl"><div class="card-t">El gancho — algo útil y gratis</div><div class="script">"¿Le puedo ayudar con algo práctico para el domingo?"</div></div>
+  <div class="ganchos">
+    <div class="gancho" onclick="abrirReg()"><span class="gancho-ico">🗺️</span><div class="gancho-t">Consultar puesto de votación</div><div class="gancho-s">Lo busco ahora mismo</div></div>
+    <div class="gancho" onclick="goto('cta-comp')"><span class="gancho-ico">🚗</span><div class="gancho-t">¿Necesita transporte?</div><div class="gancho-s">Lo coordinamos</div></div>
+    <div class="gancho" onclick="goto('cta-comp')"><span class="gancho-ico">🕗</span><div class="gancho-t">Horario del puesto</div><div class="gancho-s">Abren 8am – 4pm</div></div>
+    <div class="gancho" onclick="goto('cta-comp')"><span class="gancho-ico">🪪</span><div class="gancho-t">¿Qué llevar?</div><div class="gancho-s">Cédula vigente</div></div>
+  </div>
+  <div class="btns">
+    <button class="btn primary" onclick="goto('cta-comp')">📲 Compartir recurso ahora</button>
+    <button class="btn green" onclick="goto('captura')">📝 Solo registrar</button>
+  </div>
+</div>
+
+<div class="screen" id="sc-cta-comp">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="prog"><div class="prog-bar"><div class="prog-fill" style="width:80%"></div></div><span class="prog-txt">5/6</span></div>
+  <div class="phase ph-g">📲 Compartir en campo</div>
+  <div class="cta-box">
+    <div class="cta-t">📲 Mostrarle esto ahora</div>
+    <div class="cta-s">"¿Me permite compartirle algo que le puede interesar?"<br>Muéstrale la pantalla o envíaselo por WhatsApp</div>
+    <div id="rec-din">
+      <div class="rec ph"><div class="rec-ico">🎬</div><div><div class="rec-t">Video campaña <span class="rbadge">PRÓXIMAMENTE</span></div><div class="rec-s">Se agrega mañana</div></div><div class="rec-arr">→</div></div>
+      <div class="rec ph"><div class="rec-ico">📊</div><div><div class="rec-t">Tarjeta: Bukele vs Fajardo <span class="rbadge">PRÓXIMAMENTE</span></div><div class="rec-s">Se agrega mañana</div></div><div class="rec-arr">→</div></div>
+      <div class="rec ph"><div class="rec-ico">🎯</div><div><div class="rec-t">Mensaje oficial de cierre <span class="rbadge">PRÓXIMAMENTE</span></div><div class="rec-s">Se agrega mañana</div></div><div class="rec-arr">→</div></div>
+    </div>
+  </div>
+  <div class="btns"><button class="btn green" onclick="goto('captura')">📝 Registrar contacto →</button></div>
+</div>
+
+<div class="screen" id="sc-salida">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="phase ph-r" style="display:inline-flex;margin-bottom:.85rem">🚪 Salida elegante</div>
+  <div class="card warn"><div class="card-t">Ya decidió — sal con dignidad</div>
+    <div class="script r">"Perfecto, me alegra que ya tenga claro. Si en algún momento quiere más información antes del domingo, aquí tiene el contacto."</div>
+    <p style="font-size:var(--fsxs);color:var(--T2);margin-top:.4rem">Si duró +60 seg → ofrece los ganchos igual.</p>
+  </div>
+  <div class="btns">
+    <button class="btn secondary" onclick="goto('ganchos')">🎁 Ofrecer gancho igual</button>
+    <button class="btn secondary" onclick="showScreen('inicio');setBnav('inicio')">↩ Nueva conversación</button>
+  </div>
+</div>
+
+<div class="screen" id="sc-captura">
+  <button class="back" onclick="goBack()">← Volver</button>
+  <div class="phase ph-g">📝 Registrar contacto</div>
+  <div class="card hl">
+    <div class="form-g"><label class="form-l">Perfil identificado</label><input class="form-i auto" id="cap-perfil" type="text" placeholder="Se llena automáticamente" readonly></div>
+    <div class="form-g"><label class="form-l">WhatsApp <span class="req">*</span></label><input class="form-i" id="cap-tel" type="tel" placeholder="+57 300 000 0000" inputmode="tel"></div>
+    <div class="form-g"><label class="form-l">Nombre</label><input class="form-i" id="cap-nombre" type="text" placeholder="Nombre de la persona"></div>
+    <div class="form-g"><label class="form-l">Municipio</label><input class="form-i auto" id="cap-muni-disp" type="text" readonly></div>
+    <div class="form-g">
+      <label class="form-l">Temperatura de decisión</label>
+      <div class="stars" id="stars">
+        <span class="star" onclick="setStar(2)">●</span>
+        <span class="star" onclick="setStar(4)">●</span>
+        <span class="star" onclick="setStar(6)">●</span>
+        <span class="star" onclick="setStar(8)">●</span>
+        <span class="star" onclick="setStar(10)">●</span>
+      </div>
+      <p style="font-size:var(--fsxs);color:var(--T2)" id="star-lbl">Toca para registrar</p>
+    </div>
+  </div>
+  <div style="margin-bottom:.75rem"><button class="btn secondary extra-toggle" onclick="toggleExtra(this)"><span>+ Datos adicionales (opcional)</span><span class="btn-arr">▼</span></button></div>
+  <div id="extra-f" style="display:none">
+    <div class="form-g"><label class="form-l">Resultado</label>
+      <select class="form-i" id="cap-res"><option value="">Selecciona...</option><option>🔥 Caliente — confirmó votar Fajardo</option><option>🌡️ Tibio — quedó pensando</option><option>📲 Recibió recurso — pendiente</option><option>🚪 Salida elegante</option></select>
+    </div>
+    <div class="form-g"><label class="form-l">Acción tomada</label>
+      <select class="form-i" id="cap-acc"><option value="">Selecciona...</option><option>Invitada al Zoom Mujeres Jue 28</option><option>Le envié recurso por WhatsApp</option><option>Le avisé del Debate Vie 29</option><option>Le busqué el puesto de votación</option><option>Le coordiné transporte</option><option>Confirmó que va a votar</option></select>
+    </div>
+    <div class="form-g"><label class="form-l">Notas</label><textarea class="form-i" id="cap-notas" style="resize:none;height:60px" placeholder="Algo importante..."></textarea></div>
+  </div>
+  <div class="btns"><button class="btn green" onclick="guardar()">✅ Guardar contacto</button></div>
+</div>
+
+<div class="screen" id="sc-exito">
+  <div class="success-wrap">
+    <span class="s-ico">🎯</span>
+    <div class="s-title">¡Registrado!</div>
+    <div class="s-sub" id="exito-msg">Contacto guardado.</div>
+    <div class="counter"><div class="c-num" id="cnt-exito">0</div><div class="c-lbl">conversaciones hoy</div></div>
+    <div class="btns">
+      <button class="btn fy" onclick="iniciar()">▶ Nueva conversación</button>
+      <button class="btn secondary" onclick="showScreen('contactos');setBnav('cont')">📋 Ver contactos</button>
+    </div>
+  </div>
+</div>
+
+<div class="screen" id="sc-contactos">
+  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+    <div><div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.4rem;text-transform:uppercase;color:var(--Y)">Mis contactos</div><div style="font-size:var(--fsxs);color:var(--T2)" id="cont-count">Cargando...</div></div>
+    <div style="display:flex;gap:.4rem;">
+      <button class="btn secondary" style="width:auto;padding:.4rem .9rem;font-size:var(--fsxs)" onclick="copiarContactos()">📋 Copiar</button>
+      <button class="btn primary" style="width:auto;padding:.4rem .9rem;font-size:var(--fsxs)" onclick="exportarWhatsApp()">📤 WhatsApp</button>
+    </div>
+  </div>
+  <div id="cont-lista"></div>
+</div>
+
+<div class="screen" id="sc-recursos-all">
+  <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.4rem;text-transform:uppercase;color:var(--Y);margin-bottom:.25rem">🎯 Recursos</div>
+  <div style="font-size:var(--fsxs);color:var(--T2);margin-bottom:1rem">Filtra y comparte en el momento</div>
+  <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem" id="rfiltros"></div>
+  <div id="rlista"></div>
+</div>
+
+<div class="bnav">
+  <button class="bn on" id="bn-inicio" onclick="showScreen('inicio');setBnav('inicio')">🏠<br>Inicio</button>
+  <button class="bn conv-btn" id="bn-conv" onclick="iniciar();setBnav('conv')">▶<br>Conversar</button>
+  <button class="bn off" id="bn-rec" onclick="showScreen('recursos-all');setBnav('rec')">🎯<br>Recursos</button>
+  <button class="bn off" id="bn-cont" onclick="showScreen('contactos');setBnav('cont')">📋<br>Contactos</button>
+</div>
+
+<div id="toast"></div>
+
+<script>
+// --- INICIALIZACIÓN DE SUPABASE ---
+const SUPABASE_URL = 'https://vcztuihfibbnfuynismr.supabase.co'; // REEMPLAZA ESTO
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InZjenR1aWhmaWJibmZ1eW5pc21yIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4OTE1MDcsImV4cCI6MjA5NTQ2NzUwN30.L3Nv2KswiW81aQAQn-t3YZ9TD5_oWwy0RdzXr93xiWg'; // REEMPLAZA ESTO
+const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+// ----------------------------------
+
+var MUNICIPIOS=['Armenia','Bogotá','Barranquilla','Bucaramanga','Cali','Cartagena','Cúcuta','Dosquebradas','Ibagué','La Virginia','Manizales','Medellín','Montería','Neiva','Pasto','Pereira','Popayán','Quibdó','Riohacha','Santa Marta','Santa Rosa de Cabal','Sincelejo','Tunja','Valledupar','Villavicencio','Buenaventura','Palmira','Bello','Soledad','Itagüí','Envigado','Sabaneta','Calarcá','Circasia','Montenegro','Quimbaya','Chinchiná','Villamaría','Riosucio','La Dorada','Honda','Anserma','Aguadas','Salamina','Manzanares','Filandia','Salento','Pijao','Génova','Buenavista','Andes','Jardín','Ciudad Bolívar','Urrao','Frontino','Apartadó','Turbo','Caucasia','Barrancabermeja','Girón','Floridablanca','Rionegro','Marinilla','La Ceja','Soacha','Chía','Zipaquirá','Facatativá','Fusagasugá','Girardot','Espinal','Garzón','Pitalito','La Plata','Florencia','Mocoa','Tumaco','Ipiales'].sort();
+var RECURSOS=[
+  {id:'bukele',ico:'🛡️',t:'Fajardo vs Abelardo/Bukele',s:'Antioquia vs El Salvador — verificable',p:['anti'],tipo:'tarjeta',msg:'¿Sabía que Fajardo redujo el homicidio en Medellín un 86% sin estado de excepción? Antioquia tiene más habitantes que El Salvador. Fajardo ya hizo lo que Bukele hizo, pero sin romper la Constitución. #FajardoEnPrimera',link:null},
+  {id:'paloma',ico:'📊',t:'Por qué Paloma no puede frenar a Cepeda',s:'16% rechazo Paloma vs 2.8% Fajardo',p:['anti'],tipo:'tarjeta',msg:'A la pregunta "¿por quién nunca votaría?" el 16% respondió Paloma. Fajardo solo tiene 2.8% de rechazo. Si el objetivo es frenar a Cepeda, Fajardo es la única opción matemática. #FajardoEnPrimera',link:null},
+  {id:'viabilidad',ico:'⚡',t:'28% indecisos — Las encuestas se equivocan',s:'Rodolfo 2022 · Macron 2017',p:['todas'],tipo:'tarjeta',msg:'En 2022 las encuestas daban 0 chances a Rodolfo. Llegó a segunda vuelta. Hoy hay 7 millones de indecisos. Su voto no es fe — es matemática. #FajardoEnPrimera #HayTiempo',link:null},
+  {id:'medellin',ico:'🏙️',t:'La transformación de Medellín',s:'De la más violenta a la más innovadora',p:['prog','abs'],tipo:'tarjeta',msg:'Medellín: de 381 a 52 homicidios. 5 Parques Biblioteca en comunas violentas. Premio ciudad más innovadora del mundo 2016. Eso es lo que Fajardo construyó. #FajardoEnPrimera',link:null},
+  {id:'corrupcion',ico:'⚖️',t:'0 investigaciones por corrupción',s:'20 años de vida pública. Verificable.',p:['prog','abs','todas'],tipo:'tarjeta',msg:'Alcalde, Gobernador, 3 veces candidato presidencial. Cero investigaciones por corrupción. Sus finanzas son públicas. #FajardoEnPrimera',link:null},
+  {id:'cierre',ico:'🎯',t:'Si todos votan por miedo...',s:'Mensaje oficial de cierre',p:['todas'],tipo:'mensaje',msg:'Si todos votan por el que creen mejor, gana el mejor. Si todos votan por miedo, ganan los mismos. El domingo 31 hay 7 millones de indecisos. Tu voto sí importa. #FajardoEnPrimera #HayTiempo #HayAlternativa',link:null},
+  {id:'zoom',ico:'👩',t:'Zoom Mujeres con Edna — Jue 28',s:'Exclusivo mujeres · 7:30pm',p:['abs','todas'],tipo:'evento',msg:'Esta noche hay un encuentro virtual exclusivo para mujeres con Edna Bonilla — fórmula de Fajardo. Jueves 28, 7:30pm por Zoom. ¿Te comparto el link? #FajardoEnPrimera',link:null},
+  {id:'debate',ico:'📺',t:'Gran Debate Caracol — Vie 29 6:30pm',s:'YouTube y X · Vale la pena verlo',p:['todas'],tipo:'evento',msg:'Esta noche Fajardo está en el Gran Debate de Caracol TV. 6:30pm en YouTube y X. #FajardoEnPrimera',link:null},
+  {id:'vid1',ico:'🎬',t:'Video campaña',s:'Se agrega mañana con link real',p:['todas'],tipo:'video',msg:'',link:null,ph:true}
+];
+var navStack=[],curScreen='setup',curPerfil='',starVal=0,contacts=[],volNombre='',sesMuni='',sesBarrio='';
+
+function $(id){return document.getElementById(id);}
+function goto(id){navStack.push(curScreen);if(navStack.length>30)navStack.shift();show('sc-'+id);curScreen=id;updateFAB();}
+function goBack(){if(navStack.length>0){var p=navStack.pop();show('sc-'+p);curScreen=p;}else showScreen('inicio');updateFAB();}
+function showScreen(name){navStack=[];show('sc-'+name);curScreen=name;if(name==='contactos')renderConts();if(name==='inicio')updateCnt();if(name==='recursos-all')renderRec();updateFAB();}
+function show(id){var all=document.querySelectorAll('.screen');for(var i=0;i<all.length;i++){all[i].classList.remove('on');}var el=$(id);if(el){el.classList.add('on');window.scrollTo(0,0);}}
+function setBnav(a){var ks=['inicio','conv','rec','cont'];for(var i=0;i<ks.length;i++){var el=$('bn-'+ks[i]);if(!el)continue;if(ks[i]==='conv'){el.className='bn conv-btn';}else if(ks[i]===a){el.className='bn on';}else{el.className='bn off';}}}
+function updateFAB(){var flujo=['s1','s1b','s2a','s2b','s2c','arg-ab','arg-pa','arg-via','arg-cj','arg-cd','arg-am','arg-aj','arg-amay','cierre-d','ganchos','cta-comp','salida'];var show=flujo.indexOf(curScreen)>=0;$('fab').className=show?'fab':'fab hidden';}
+
+async function doSetup() {
+  var e=$('inp-email').value.trim();
+  var p=$('inp-pass').value.trim();
+  
+  if(!e || !p){ alert('Correo y contraseña son obligatorios.'); return; }
+  
+  toast('Iniciando sesión...');
+  const { data, error } = await _supabase.auth.signInWithPassword({ email: e, password: p });
+  
+  if (error) { alert('Error al iniciar sesión: ' + error.message); return; }
+  
+  currentUserId = data.user.id;
+
+  // Recuperar datos adicionales del voluntario
+  const { data: volData } = await _supabase.from('voluntarios').select('*').eq('id', currentUserId).single();
+  
+  var n = volData ? volData.nombre : 'Voluntario';
+  var m = volData ? volData.municipio : $('inp-muni-s').value.trim();
+  var b = volData ? volData.barrio : $('inp-barrio-s').value.trim();
+
+  toast('¡Bienvenido de nuevo!');
+  iniciarSesionLocal(n, m, b);
+}
+
+var currentUserId = null;
+
+// --- AUTENTICACIÓN Y REGISTRO ---
+async function doRegister() {
+  var e=$('inp-email').value.trim();
+  var p=$('inp-pass').value.trim();
+  var n=$('inp-vol').value.trim();
+  var m=$('inp-muni-s').value.trim();
+  var b=$('inp-barrio-s').value.trim();
+  
+  if(!n || !e || !p){ alert('Correo, contraseña y nombre son obligatorios para registrarse.'); return; }
+  
+  toast('Creando cuenta...');
+  const { data, error } = await _supabase.auth.signUp({ email: e, password: p });
+  
+  if (error) { alert('Error al registrarse: ' + error.message); return; }
+  if (data.user && data.user.identities && data.user.identities.length === 0) {
+    alert('Este correo ya está registrado. Por favor usa "Iniciar Sesión".'); return;
+  }
+
+  currentUserId = data.user.id;
+
+  // Guardar datos adicionales en la tabla voluntarios
+  await _supabase.from('voluntarios').insert({
+    id: currentUserId, nombre: n, municipio: m, barrio: b
+  });
+
+  toast('¡Registro exitoso!');
+  iniciarSesionLocal(n, m, b);
+}
+
+function iniciarSesionLocal(n, m, b) {
+  volNombre=n; sesMuni=m; sesBarrio=b;
+  $('ses-nom').textContent=n;
+  $('ses-zona').textContent=(m||(b?b:'Sin zona'))+(m&&b?' · '+b:'');
+  $('cap-muni-disp').value=m||b||'Sin municipio';
+  
+  loadContacts(); // Carga contactos específicos de este usuario
+  fetchContactsFromDB(); // Sincroniza desde la nube al iniciar
+  
+  showScreen('inicio');
+  setBnav('inicio');
+}
+
+async function fetchContactsFromDB() {
+  if (!navigator.onLine || !currentUserId) return;
+  // Solo traerá los suyos gracias a las políticas RLS de Supabase
+  const { data, error } = await _supabase.from('contactos').select('*').order('created_at', { ascending: false });
+  if (!error && data) {
+    // Mapear al formato local asegurando que tengan el tag de sincronizado
+    contacts = data.map(c => Object.assign({}, c, { tel: c.telefono, synced: true }));
+    saveContacts();
+    renderConts();
+    updateCnt();
+  }
+}
+
+function iniciar(){curPerfil='';starVal=0;resetForm();setBnav('conv');goto('s1');}
+function setP(p){curPerfil=p;var el=$('cap-perfil');if(el)el.value=p;}
+function bMuni(val,resId){var res=$(resId);if(!val||val.length<1){res.className='muni-results';return;}var m=MUNICIPIOS.filter(function(x){return x.toLowerCase().indexOf(val.toLowerCase())===0;}).slice(0,7);if(!m.length){res.className='muni-results';return;}res.innerHTML=m.map(function(x){return '<div class="muni-opt" onclick="selMuni(\''+x+'\',\''+resId+'\')">'+x+'</div>';}).join('');res.className='muni-results show';}
+function selMuni(m,resId){if(resId==='muni-res-s'){sesMuni=m;$('inp-muni-s').value=m;}$(resId).className='muni-results';}
+function showObj(id,btn){var par=btn.closest('.screen');var tabs=par.querySelectorAll('.otab');var panels=par.querySelectorAll('.opanel');for(var i=0;i<tabs.length;i++)tabs[i].classList.remove('on');for(var i=0;i<panels.length;i++)panels[i].classList.remove('on');btn.classList.add('on');var el=$(id);if(el)el.classList.add('on');}
+function toggleExtra(btn){var f=$('extra-f');if(f.style.display==='none'){f.style.display='block';btn.querySelector('.btn-arr').textContent='▲';}else{f.style.display='none';btn.querySelector('.btn-arr').textContent='▼';}}
+
+var starMap=[2,4,6,8,10],starLabels=['Muy frío','Frío','Tibio','Caliente 🔥','Decidido ✅'];
+function setStar(val){starVal=val;var idx=starMap.indexOf(val);var stars=document.querySelectorAll('#stars .star');for(var i=0;i<stars.length;i++)stars[i].classList.toggle('on',i<=idx);var lbl=$('star-lbl');if(lbl)lbl.textContent=starLabels[idx]||'';}
+function abrirReg(){window.open('https://wsp.registraduria.gov.co/censo/consultar/','_blank');toast('🗺️ Abriendo Registraduría...');}
+
+function loadContacts() {
+  if (!currentUserId) return;
+  try {
+    var d = localStorage.getItem('cpv3_' + currentUserId);
+    if (d) contacts = JSON.parse(d);
+    else contacts = [];
+  } catch(e) { contacts = []; }
+}
+
+function saveContacts() {
+  if (!currentUserId) return;
+  try { localStorage.setItem('cpv3_' + currentUserId, JSON.stringify(contacts)); } catch(e){}
+}
+
+function guardar() {
+  if (!currentUserId) { alert('Debes iniciar sesión para registrar contactos.'); return; }
+  
+  var tel=$('cap-tel').value.trim();
+  if(!tel){alert('El número de WhatsApp es obligatorio (*).');return;}
+  
+  var now=new Date();
+  var c={
+    id:now.getTime(), voluntario:volNombre, fecha:now.toLocaleDateString('es-CO'), hora:now.toLocaleTimeString('es-CO',{hour:'2-digit',minute:'2-digit'}), 
+    nombre:$('cap-nombre').value.trim()||'Sin nombre', tel:tel, municipio:sesMuni, barrio:sesBarrio, temperatura:starVal, 
+    perfil:curPerfil, resultado:$('cap-res')?$('cap-res').value:'', accion:$('cap-acc')?$('cap-acc').value:'', 
+    notas:$('cap-notas')?$('cap-notas').value.trim():'', caliente:starVal>=6, synced: false
+  };
+  
+  contacts.unshift(c); 
+  saveContacts();
+  
+  $('exito-msg').textContent=c.caliente?'🔥 '+c.nombre+' guardado como CALIENTE para el sábado.':'✅ '+c.nombre+' guardado correctamente.';
+  $('cnt-exito').textContent=contacts.length;
+  updateCnt(); curPerfil=''; starVal=0; resetForm(); goto('exito');
+  syncToSupabase();
+}
+
+async function syncToSupabase() {
+  if (!navigator.onLine || !currentUserId) return;
+  var unsynced = contacts.filter(function(c) { return !c.synced; });
+  if (unsynced.length === 0) return;
+
+  var { error } = await _supabase.from('contactos').insert(
+    unsynced.map(function(c) {
+      return { 
+        user_id: currentUserId, // Forzado por seguridad
+        voluntario: c.voluntario, nombre: c.nombre, telefono: c.tel, 
+        municipio: c.municipio, barrio: c.barrio, perfil: c.perfil, 
+        caliente: c.caliente, resultado: c.resultado, accion: c.accion, 
+        notas: c.notas, fecha: c.fecha, hora: c.hora
+      };
+    })
+  );
+
+  if (!error) {
+    contacts = contacts.map(function(c) { return Object.assign({}, c, {synced: true}); });
+    saveContacts();
+    toast('☁️ Contactos sincronizados en la nube');
+  }
+}
+
+window.addEventListener('online', syncToSupabase);
+
+function renderConts(){
+  var lista=$('cont-lista'),count=$('cont-count');
+  var cal=contacts.filter(function(c){return c.caliente;}).length;
+  count.textContent=contacts.length+' contactos · '+cal+' calientes para el sábado';
+  if(!contacts.length){lista.innerHTML='<div style="text-align:center;padding:2rem;color:rgba(255,255,255,.3)">Sin contactos aún.</div>';return;}
+  lista.innerHTML=contacts.map(function(c){return '<div class="contact-item '+(c.caliente?'hot':'warm')+'"><div class="c-name">'+c.nombre+' '+(c.caliente?'🔥':'')+'</div><div class="c-meta">'+(c.municipio||'')+(c.barrio?' · '+c.barrio:'')+' · '+c.hora+' '+c.fecha+(c.tel?' · '+c.tel:'')+'</div><div class="c-tags">'+(c.perfil?'<span class="ctag y">'+c.perfil.substring(0,28)+'</span>':'')+' '+(c.caliente?'<span class="ctag g">Caliente</span>':'<span class="ctag r">Tibio</span>')+' '+(c.synced?'<span class="ctag g" style="background:transparent;border:1px solid #5EC48A">☁️ Ok</span>':'')+'</div></div>';}).join('');
+}
+
+function renderRec(){
+  var filtros=[{k:'todas',l:'Todos'},{k:'anti',l:'⚡ Anti-Cepeda'},{k:'prog',l:'✊ Progresista'},{k:'abs',l:'😶 Abstencionista'},{k:'evento',l:'📅 Eventos'}];
+  $('rfiltros').innerHTML=filtros.map(function(f,i){return '<button style="padding:.32rem .75rem;font-size:var(--fsxs);font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid '+(i===0?'var(--Y)':'var(--T3)')+';color:'+(i===0?'var(--B)':'var(--T2)')+';background:'+(i===0?'var(--Y)':'transparent')+';touch-action:manipulation" onclick="filtrarRec(\''+f.k+'\',this)">'+f.l+'</button>';}).join('');
+  
+  $('rlista').innerHTML=RECURSOS.map(function(r){
+    var copyBtn = !r.ph ? '<button class="hbtn" style="width:100%; margin-top:10px; font-weight:bold; color:var(--Y); border-color:rgba(245,197,24,0.3); background:rgba(245,197,24,0.05)" onclick="event.stopPropagation(); copiar(\''+r.msg+'\'); toast(\'✅ Texto copiado al portapapeles\')">📋 COPIAR TEXTO</button>' : '';
+    return '<div class="rec'+(r.ph?' ph':'')+'" data-tipo="'+r.tipo+'" data-p="'+r.p.join(',')+'" onclick="'+(r.ph?"toast('Disponible mañana')":'compartir(\''+r.id+'\'')+'" style="margin-bottom:.5rem; display:block;"><div style="display:flex; align-items:center; gap:.75rem"><div class="rec-ico">'+r.ico+'</div><div><div class="rec-t">'+r.t+(r.ph?'<span class="rbadge">PRÓXIMAMENTE</span>':'')+'</div><div class="rec-s">'+r.s+'</div></div></div>' + copyBtn + '</div>';
+  }).join('');
+}
+
+function filtrarRec(key,btn){var bs=document.querySelectorAll('#rfiltros button');for(var i=0;i<bs.length;i++){bs[i].style.background='transparent';bs[i].style.color='var(--T2)';bs[i].style.borderColor='var(--T3)';}btn.style.background='var(--Y)';btn.style.color='var(--B)';btn.style.borderColor='var(--Y)';var items=document.querySelectorAll('#rlista .rec');for(var i=0;i<items.length;i++){var p=items[i].dataset.p||'';var t=items[i].dataset.tipo||'';items[i].style.display=(key==='todas'||p.indexOf(key)>=0||t===key)?'':'none';}}
+function compartir(id){var r=RECURSOS.filter(function(x){return x.id===id;})[0];if(!r||!r.msg){toast('📌 Recurso disponible pronto');return;}if(r.link)window.open(r.link,'_blank');copiar(r.msg);toast('✅ Mensaje copiado — pégalo en WhatsApp');}
+function copiar(txt){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).catch(function(){cf(txt);});}else{cf(txt);}}
+function cf(txt){var ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;top:0;left:0;opacity:0;width:1px;height:1px;';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);}
+
+function generarTextoContactos() {
+  var cal = contacts.filter(function(c) { return c.caliente && c.tel; });
+  if (!cal.length) return null;
+  
+  var txt = '📋 *CONTACTOS CALIENTES*\n👤 Voluntario: ' + volNombre + '\n\n';
+  cal.forEach(function(c, index) {
+    var numLimpiado = c.tel.replace(/\D/g, ''); 
+    if(numLimpiado.length === 10) numLimpiado = '57' + numLimpiado;
+    
+    txt += (index + 1) + '. *' + c.nombre + '*\n';
+    txt += '📍 ' + (c.municipio || 'Sin municipio') + (c.barrio ? ' - ' + c.barrio : '') + '\n';
+    txt += '🔗 https://wa.me/' + numLimpiado + '\n';
+    txt += '🗣️ Perfil: ' + (c.perfil || 'N/A') + '\n\n';
+  });
+  txt += 'Total: ' + cal.length + ' contactos para contactar hoy.';
+  return txt;
+}
+
+function exportarWhatsApp() {
+  var txt = generarTextoContactos();
+  if (!txt) { alert('No hay contactos calientes registrados con número.'); return; }
+  var url = 'https://api.whatsapp.com/send?text=' + encodeURIComponent(txt);
+  window.open(url, '_blank');
+}
+
+function copiarContactos() {
+  var txt = generarTextoContactos();
+  if (!txt) { alert('No hay contactos calientes registrados con número.'); return; }
+  copiar(txt);
+  toast('✅ Lista de contactos copiada al portapapeles');
+}
+
+function updateCnt(){var el=$('cnt-main');if(el)el.textContent=contacts.length;}
+function resetForm(){var ids=['cap-nombre','cap-tel','cap-notas'];for(var i=0;i<ids.length;i++){var e=$(ids[i]);if(e)e.value='';}var sids=['cap-res','cap-acc'];for(var i=0;i<sids.length;i++){var e=$(sids[i]);if(e)e.value='';}var stars=document.querySelectorAll('#stars .star');for(var i=0;i<stars.length;i++)stars[i].classList.remove('on');var l=$('star-lbl');if(l)l.textContent='Toca para registrar';starVal=0;var ef=$('extra-f');if(ef)ef.style.display='none';}
+function toast(msg){var t=$('toast');t.textContent=msg;t.style.opacity='1';setTimeout(function(){t.style.opacity='0';},2500);}
+document.addEventListener('click',function(e){if(!e.target.closest('.muni-wrap')){var rs=document.querySelectorAll('.muni-results');for(var i=0;i<rs.length;i++)rs[i].className='muni-results';}});
+
+window.onload=function(){
+  loadContacts();
+  updateCnt();
+  renderRec();
+  updateFAB();
+  syncToSupabase();
+};
+
+// REGISTRAR EL SERVICE WORKER
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js').then(function(registration) {
+      console.log('ServiceWorker registrado con éxito con el scope: ', registration.scope);
+    }, function(err) {
+      console.log('Error al registrar el ServiceWorker: ', err);
+    });
+  });
+}
+</script>
+</body>
+</html>
