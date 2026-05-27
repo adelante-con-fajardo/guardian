@@ -4,9 +4,8 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>Conversaciones Poderosas · Fajardo 2026</title>
-<link rel="manifest" href="manifest.json">
+<link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#F5C518">
-<link rel="apple-touch-icon" href="icon-192.png">
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@700;900&family=Barlow:wght@400;500;600&display=swap');
@@ -824,14 +823,16 @@ window.onload=function(){
 
 // REGISTRAR EL SERVICE WORKER
 if ('serviceWorker' in navigator) {
-  window.addEventListener('load', function() {
-    navigator.serviceWorker.register('./sw.js').then(function(registration) {
-      console.log('ServiceWorker registrado con éxito con el scope: ', registration.scope);
-    }, function(err) {
-      console.log('Error al registrar el ServiceWorker: ', err);
-    });
-  });
-}
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then(registration => {
+            console.log('Service Worker registrado con éxito en el alcance: ', registration.scope);
+          })
+          .catch(error => {
+            console.error('Fallo al registrar el Service Worker: ', error);
+          });
+      });
+    }
 </script>
 </body>
 </html>
