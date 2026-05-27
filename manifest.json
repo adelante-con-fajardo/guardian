@@ -1,6 +1,7 @@
 {
-  "name": "Conversaciones Poderosas",
-  "short_name": "Guardian",
+  "name": "Conversaciones Poderosas · Fajardo 2026",
+  "short_name": "Conv. Poderosas",
+  "description": "Aplicación de campaña para el registro de interacciones en campo de los voluntarios.",
   "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#08111F",
@@ -10,7 +11,8 @@
     {
       "src": "icon-192.png",
       "sizes": "192x192",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any maskable"
     },
     {
       "src": "icon-512.png",
