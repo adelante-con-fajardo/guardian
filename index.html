@@ -945,12 +945,15 @@ async function cargarVideosSupabase() {
   }
   
   lista.innerHTML = data.map(function(v) {
+    // Escapar comillas en el título por si acaso para no romper el HTML
+    var tituloSeguro = v.titulo.replace(/'/g, "\\'");
+
     return `
       <div class="vid-supa" style="background:var(--BM);border-radius:10px;padding:.85rem;margin-bottom:.55rem;border:1px solid var(--Y)">
         
         <div style="font-weight:700;font-size:.9rem;color:var(--W);margin-bottom:.4rem">${v.titulo}</div>
         
-        <div style="width: 100%; border-radius: 6px; overflow: hidden; background: #000; margin-bottom: .6rem; border: 1px solid var(--T3);">
+        <div style="width: 80%; border-radius: 6px; overflow: hidden; background: #000; margin-bottom: .6rem; border: 1px solid var(--T3);">
           <video controls preload="metadata" style="width: 100%; max-width: 100%; height: auto; display: block;">
             <source src="${v.url_descarga}" type="video/mp4">
             Tu navegador no soporta la reproducción de video.
@@ -960,7 +963,7 @@ async function cargarVideosSupabase() {
         <div style="font-size:.75rem;color:var(--T2);margin-bottom:.6rem;font-style:italic;line-height:1.4">${v.descripcion || ''}</div>
         
         <div style="display:flex;gap:.4rem;">
-          <button onclick="window.open('${v.url_descarga}', '_blank')" style="flex:1;background:var(--Y);color:var(--B);border:none;border-radius:6px;padding:.5rem;font-size:.7rem;font-weight:700;text-transform:uppercase;touch-action:manipulation">
+          <button onclick="descargarVideo('${v.url_descarga}', '${tituloSeguro}')" style="flex:1;background:var(--Y);color:var(--B);border:none;border-radius:6px;padding:.5rem;font-size:.7rem;font-weight:700;text-transform:uppercase;touch-action:manipulation">
             📥 Descargar MP4
           </button>
         </div>
@@ -968,6 +971,46 @@ async function cargarVideosSupabase() {
       </div>`;
   }).join('');
 }
+
+
+async function descargarVideo(url, titulo) {
+  try {
+    toast('⏳ Iniciando descarga...');
+    
+    // Crear un nombre de archivo limpio basado en el título
+    var nombreLimpio = titulo.replace(/[^a-z0-9]/gi, '_').toLowerCase();
+    var nombreArchivo = nombreLimpio + '.mp4';
+
+    // Hacer la petición para descargar el archivo
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Error al obtener el archivo');
+    
+    // Convertir a un objeto tipo Blob (archivo binario)
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
+    
+    // Crear un enlace temporal (<a>) invisible y forzar el clic
+    const a = document.createElement('a');
+    a.style.display = 'none';
+    a.href = blobUrl;
+    a.download = nombreArchivo; // Este atributo fuerza la descarga
+    document.body.appendChild(a);
+    a.click();
+    
+    // Limpieza
+    window.URL.revokeObjectURL(blobUrl);
+    document.body.removeChild(a);
+    
+    toast('✅ ¡Descarga completada!');
+    
+  } catch (error) {
+    console.error('Error en la descarga:', error);
+    toast('❌ Hubo un error. Abriendo en nueva pestaña...');
+    // Fallback: Si falla (por ejemplo, por reglas de seguridad CORS), lo abre normalmente
+    window.open(url, '_blank');
+  }
+}
+
 function compartir(id){var r=RECURSOS.filter(function(x){return x.id===id;})[0];if(!r||!r.msg){toast('📌 Recurso disponible pronto');return;}if(r.link)window.open(r.link,'_blank');copiar(r.msg);toast('✅ Mensaje copiado — pégalo en WhatsApp');}
 function copiar(txt){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).catch(function(){cf(txt);});}else{cf(txt);}}
 function cf(txt){var ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;top:0;left:0;opacity:0;width:1px;height:1px;';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);}
