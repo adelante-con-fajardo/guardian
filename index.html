@@ -861,6 +861,7 @@ function renderRec(filtro) {
   if (filtro === 'videos-descargar') {
     lista.innerHTML = '';
     cargarVideosSupabase();
+
     return;
   }
 
@@ -946,16 +947,24 @@ async function cargarVideosSupabase() {
   lista.innerHTML = data.map(function(v) {
     return `
       <div class="vid-supa" style="background:var(--BM);border-radius:10px;padding:.85rem;margin-bottom:.55rem;border:1px solid var(--Y)">
-        <div style="display:flex;align-items:flex-start;gap:.65rem">
-          <span style="font-size:1.4rem;flex-shrink:0">📥</span>
-          <div style="flex:1">
-            <div style="font-weight:700;font-size:.85rem;color:var(--W)">${v.titulo}</div>
-            <div style="font-size:.72rem;color:var(--T2);margin-top:.25rem;font-style:italic;line-height:1.4">${v.descripcion || ''}</div>
-            <div style="display:flex;gap:.4rem;margin-top:.6rem">
-              <button onclick="window.open('${v.url_descarga}', '_blank')" style="flex:1;background:var(--Y);color:var(--B);border:none;border-radius:6px;padding:.4rem .5rem;font-size:.65rem;font-weight:700;text-transform:uppercase;touch-action:manipulation">🔗 Descargar MP4</button>
-            </div>
-          </div>
+        
+        <div style="font-weight:700;font-size:.9rem;color:var(--W);margin-bottom:.4rem">${v.titulo}</div>
+        
+        <div style="width: 100%; border-radius: 6px; overflow: hidden; background: #000; margin-bottom: .6rem; border: 1px solid var(--T3);">
+          <video controls preload="metadata" style="width: 100%; max-width: 100%; height: auto; display: block;">
+            <source src="${v.url_descarga}" type="video/mp4">
+            Tu navegador no soporta la reproducción de video.
+          </video>
         </div>
+        
+        <div style="font-size:.75rem;color:var(--T2);margin-bottom:.6rem;font-style:italic;line-height:1.4">${v.descripcion || ''}</div>
+        
+        <div style="display:flex;gap:.4rem;">
+          <button onclick="window.open('${v.url_descarga}', '_blank')" style="flex:1;background:var(--Y);color:var(--B);border:none;border-radius:6px;padding:.5rem;font-size:.7rem;font-weight:700;text-transform:uppercase;touch-action:manipulation">
+            📥 Descargar MP4
+          </button>
+        </div>
+        
       </div>`;
   }).join('');
 }
