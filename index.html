@@ -556,8 +556,21 @@ select.form-i option{background:#132236;}
 <div class="screen" id="sc-recursos-all">
   <div style="font-family:'Barlow Condensed',sans-serif;font-weight:900;font-size:1.4rem;text-transform:uppercase;color:var(--Y);margin-bottom:.25rem">🎯 Recursos</div>
   <div style="font-size:var(--fsxs);color:var(--T2);margin-bottom:1rem">Filtra y comparte en el momento</div>
-  <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem" id="rfiltros"></div>
-  <div id="rlista"></div>
+  
+  <div style="display:flex;gap:.35rem;flex-wrap:wrap;margin-bottom:1rem" id="rfiltros">
+    <button data-key="todas" onclick="filtrarRecBtn(this)" style="padding:.3rem .7rem;font-size:.65rem;font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid var(--Y);color:var(--B);background:var(--Y);touch-action:manipulation;white-space:nowrap;margin-bottom:.35rem">Todos</button>
+    <button data-key="anti-ab" onclick="filtrarRecBtn(this)" style="padding:.3rem .7rem;font-size:.65rem;font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.5);background:transparent;touch-action:manipulation;white-space:nowrap;margin-bottom:.35rem">vs Abelardo</button>
+    <button data-key="anti-pa" onclick="filtrarRecBtn(this)" style="padding:.3rem .7rem;font-size:.65rem;font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.5);background:transparent;touch-action:manipulation;white-space:nowrap;margin-bottom:.35rem">vs Paloma</button>
+    <button data-key="prog-decep" onclick="filtrarRecBtn(this)" style="padding:.3rem .7rem;font-size:.65rem;font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.5);background:transparent;touch-action:manipulation;white-space:nowrap;margin-bottom:.35rem">Ex-petrista</button>
+    <button data-key="prog-joven" onclick="filtrarRecBtn(this)" style="padding:.3rem .7rem;font-size:.65rem;font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.5);background:transparent;touch-action:manipulation;white-space:nowrap;margin-bottom:.35rem">Joven idealista</button>
+    <button data-key="abs-mujer" onclick="filtrarRecBtn(this)" style="padding:.3rem .7rem;font-size:.65rem;font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.5);background:transparent;touch-action:manipulation;white-space:nowrap;margin-bottom:.35rem">Mujer</button>
+    <button data-key="abs-joven" onclick="filtrarRecBtn(this)" style="padding:.3rem .7rem;font-size:.65rem;font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.5);background:transparent;touch-action:manipulation;white-space:nowrap;margin-bottom:.35rem">Joven abs.</button>
+    <button data-key="abs-mayor" onclick="filtrarRecBtn(this)" style="padding:.3rem .7rem;font-size:.65rem;font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.5);background:transparent;touch-action:manipulation;white-space:nowrap;margin-bottom:.35rem">Adulto</button>
+    <button data-key="videos-descargar" onclick="filtrarRecBtn(this)" style="padding:.3rem .7rem;font-size:.65rem;font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid rgba(255,255,255,.13);color:rgba(255,255,255,.5);background:transparent;touch-action:manipulation;white-space:nowrap;margin-bottom:.35rem">🎬 Videos Descargar</button>
+  </div>
+  
+  <div id="rlista">
+    </div>
 </div>
 
 <div class="bnav">
@@ -578,16 +591,70 @@ const _supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 var MUNICIPIOS=['Armenia','Bogotá','Barranquilla','Bucaramanga','Cali','Cartagena','Cúcuta','Dosquebradas','Ibagué','La Virginia','Manizales','Medellín','Montería','Neiva','Pasto','Pereira','Popayán','Quibdó','Riohacha','Santa Marta','Santa Rosa de Cabal','Sincelejo','Tunja','Valledupar','Villavicencio','Buenaventura','Palmira','Bello','Soledad','Itagüí','Envigado','Sabaneta','Calarcá','Circasia','Montenegro','Quimbaya','Chinchiná','Villamaría','Riosucio','La Dorada','Honda','Anserma','Aguadas','Salamina','Manzanares','Filandia','Salento','Pijao','Génova','Buenavista','Andes','Jardín','Ciudad Bolívar','Urrao','Frontino','Apartadó','Turbo','Caucasia','Barrancabermeja','Girón','Floridablanca','Rionegro','Marinilla','La Ceja','Soacha','Chía','Zipaquirá','Facatativá','Fusagasugá','Girardot','Espinal','Garzón','Pitalito','La Plata','Florencia','Mocoa','Tumaco','Ipiales'].sort();
 var RECURSOS=[
-  {id:'bukele',ico:'🛡️',t:'Fajardo vs Abelardo/Bukele',s:'Antioquia vs El Salvador — verificable',p:['anti'],tipo:'tarjeta',msg:'¿Sabía que Fajardo redujo el homicidio en Medellín un 86% sin estado de excepción? Antioquia tiene más habitantes que El Salvador. Fajardo ya hizo lo que Bukele hizo, pero sin romper la Constitución. #FajardoEnPrimera',link:null},
-  {id:'paloma',ico:'📊',t:'Por qué Paloma no puede frenar a Cepeda',s:'16% rechazo Paloma vs 2.8% Fajardo',p:['anti'],tipo:'tarjeta',msg:'A la pregunta "¿por quién nunca votaría?" el 16% respondió Paloma. Fajardo solo tiene 2.8% de rechazo. Si el objetivo es frenar a Cepeda, Fajardo es la única opción matemática. #FajardoEnPrimera',link:null},
-  {id:'viabilidad',ico:'⚡',t:'28% indecisos — Las encuestas se equivocan',s:'Rodolfo 2022 · Macron 2017',p:['todas'],tipo:'tarjeta',msg:'En 2022 las encuestas daban 0 chances a Rodolfo. Llegó a segunda vuelta. Hoy hay 7 millones de indecisos. Su voto no es fe — es matemática. #FajardoEnPrimera #HayTiempo',link:null},
-  {id:'medellin',ico:'🏙️',t:'La transformación de Medellín',s:'De la más violenta a la más innovadora',p:['prog','abs'],tipo:'tarjeta',msg:'Medellín: de 381 a 52 homicidios. 5 Parques Biblioteca en comunas violentas. Premio ciudad más innovadora del mundo 2016. Eso es lo que Fajardo construyó. #FajardoEnPrimera',link:null},
-  {id:'corrupcion',ico:'⚖️',t:'0 investigaciones por corrupción',s:'20 años de vida pública. Verificable.',p:['prog','abs','todas'],tipo:'tarjeta',msg:'Alcalde, Gobernador, 3 veces candidato presidencial. Cero investigaciones por corrupción. Sus finanzas son públicas. #FajardoEnPrimera',link:null},
-  {id:'cierre',ico:'🎯',t:'Si todos votan por miedo...',s:'Mensaje oficial de cierre',p:['todas'],tipo:'mensaje',msg:'Si todos votan por el que creen mejor, gana el mejor. Si todos votan por miedo, ganan los mismos. El domingo 31 hay 7 millones de indecisos. Tu voto sí importa. #FajardoEnPrimera #HayTiempo #HayAlternativa',link:null},
-  {id:'zoom',ico:'👩',t:'Zoom Mujeres con Edna — Jue 28',s:'Exclusivo mujeres · 7:30pm',p:['abs','todas'],tipo:'evento',msg:'Esta noche hay un encuentro virtual exclusivo para mujeres con Edna Bonilla — fórmula de Fajardo. Jueves 28, 7:30pm por Zoom. ¿Te comparto el link? #FajardoEnPrimera',link:null},
-  {id:'debate',ico:'📺',t:'Gran Debate Caracol — Vie 29 6:30pm',s:'YouTube y X · Vale la pena verlo',p:['todas'],tipo:'evento',msg:'Esta noche Fajardo está en el Gran Debate de Caracol TV. 6:30pm en YouTube y X. #FajardoEnPrimera',link:null},
-  {id:'vid1',ico:'🎬',t:'Video campaña',s:'Se agrega mañana con link real',p:['todas'],tipo:'video',msg:'',link:null,ph:true}
+/* ══ ANTI-CEPEDA · vs ABELARDO ══ */
+{id:'ab-animales',ico:'🐾',t:'Abelardo y los animales',s:'Lo moviliza: los animales',p:['anti','anti-ab'],moviliza:'🐾 Lo moviliza: los animales',msg:'¿Sabía que Abelardo le ponía pólvora a los gatos para divertirse? Tenemos que votar por los que no tienen voz. Estas son las propuestas de Fajardo por las mascotas y los animales de la calle. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYvifcCtZW2/'},
+{id:'ab-salud',ico:'🏥',t:'Fajardo no le da la espalda a la salud',s:'Lo moviliza: la salud',p:['anti','anti-ab','abs'],moviliza:'🏥 Lo moviliza: la salud',msg:'Nosotros no le damos la espalda a la salud y a los pacientes. Tenemos clara la fórmula para salvarla. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYj8vPIg11G/'},
+{id:'ab-corrupcion1',ico:'💸',t:'No se barre la corrupción con la misma escoba',s:'Lo moviliza: la corrupción',p:['anti','anti-ab'],moviliza:'💸 Lo moviliza: la corrupción',msg:'Vamos a combatir la corrupción cuando la principal experiencia de Abelardo es defender a los corruptos. No se puede barrer la corrupción con la misma escoba que la ha protegido. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYXSFEwAXkj/'},
+{id:'ab-corrupcion2',ico:'💸',t:'Abelardo defendió a los corruptos',s:'Lo moviliza: la corrupción (2)',p:['anti','anti-ab'],moviliza:'💸 Lo moviliza: la corrupción',msg:'Abelardo ha pasado su carrera defendiendo a los corruptos que hoy dice querer combatir. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DYu5n0Dxnj-/'},
+{id:'ab-experiencia',ico:'📋',t:'La experiencia no se improvisa',s:'Lo moviliza: la experiencia',p:['anti','anti-ab'],moviliza:'📋 Lo moviliza: la experiencia',msg:'¿De verdad cree que Abelardo tiene experiencia? ¿O que conoce a Colombia para resolver sus problemas? #FajardoEnPrimera',link:'https://www.instagram.com/p/DYSOKXPAquc/'},
+{id:'ab-religion',ico:'✝️',t:'Fajardo y los valores',s:'Lo moviliza: la religión / valores',p:['anti','anti-ab'],moviliza:'✝️ Lo moviliza: la religión / valores',msg:'Fajardo defiende los valores de las familias colombianas. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DYzSJgPqHmm/'},
+{id:'ab-premio1',ico:'🏆',t:'Un Premio para Fajardo',s:'Lo moviliza: resultados comprobados',p:['anti','anti-ab','todas'],moviliza:'🏆 Lo moviliza: resultados comprobados',msg:'Fajardo tiene el historial de logros más sólido de todos los candidatos. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY3NRsEMaun/'},
+{id:'ab-premio2',ico:'🏆',t:'Otro Premio para Fajardo',s:'Lo moviliza: resultados (2)',p:['anti','anti-ab','todas'],moviliza:'🏆 Lo moviliza: resultados',msg:'Los premios no se piden — se ganan con gestión. Fajardo los tiene. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DYzbEcfuOtt/'},
+{id:'ab-bukele',ico:'🇨🇴',t:'Fajardo ya hizo lo que Bukele hizo',s:'Lo moviliza: quiere resultados como Bukele',p:['anti','anti-ab'],moviliza:'🇨🇴 Lo moviliza: quiere resultados como Bukele',msg:'¿Admira lo que hizo Bukele en El Salvador? Fajardo ya lo hizo en Antioquia — con más habitantes que El Salvador, y sin romper la Constitución. #FajardoEnPrimera',link:'https://vt.tiktok.com/ZSxpoj6UD/'},
+{id:'ab-encuestas',ico:'📊',t:'Las encuestas se equivocan',s:'Lo moviliza: las encuestas mienten',p:['anti','todas'],moviliza:'📊 Lo moviliza: las encuestas mienten',msg:'En 2022 todas las encuestas daban 0 chances a Rodolfo. Llegó a segunda vuelta. Hoy hay 7 millones de indecisos. Cuando esa fuerza silenciosa vota unida, pasa la sorpresa. #FajardoEnPrimera',link:null,ph:true},
+
+/* ══ ANTI-CEPEDA · vs PALOMA ══ */
+{id:'pa-corrupcion',ico:'💸',t:'Sin corruptos en las tarimas',s:'Lo moviliza: la corrupción',p:['anti','anti-pa'],moviliza:'💸 Lo moviliza: la corrupción',msg:'Estamos convencidos de que la política se puede hacer de manera distinta. Sin corruptos en las tarimas. Sin fortunas oscuras. Sin padrinos. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYsjTOxphUU/'},
+{id:'pa-ciclo',ico:'🔄',t:'Uribe → Duque → Petro → ¿Paloma?',s:'Lo moviliza: romper el ciclo',p:['anti','anti-pa'],moviliza:'🔄 Lo moviliza: romper el ciclo',msg:'Si Petro hoy está en el poder es porque Duque, el que puso Uribe, no supo manejar el país. ¿Por qué vamos a elegir a los mismos para que en 4 años vuelva otro Petro 3.0? #FajardoEnPrimera',link:'https://www.instagram.com/p/DX72vTKtz-9/'},
+{id:'pa-seguridad',ico:'🔒',t:'La experiencia en seguridad no se hereda',s:'Lo moviliza: la seguridad',p:['anti','anti-pa'],moviliza:'🔒 Lo moviliza: la seguridad',msg:'La experiencia no la regalan ni se hereda, mucho menos en seguridad. Para combatir el narcotráfico no solo debemos hablar de aspersión. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYR59G7AslI/'},
+{id:'pa-coherencia',ico:'🧐',t:'La hija de Uribe no puede escribir nueva historia',s:'Lo moviliza: la coherencia',p:['anti','anti-pa'],moviliza:'🧐 Lo moviliza: la coherencia',msg:'Como Paloma, la autodenominada "hija de Uribe", puede escribir una "nueva" historia con los mismos de siempre. Algo no cuadra. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYNoGebJYBq/'},
+{id:'pa-rechazo',ico:'📊',t:'16% rechaza Paloma vs 2.8% Fajardo',s:'Lo moviliza: el rechazo',p:['anti','anti-pa'],moviliza:'📊 Lo moviliza: el rechazo',msg:'A la pregunta "¿por quién nunca votaría?" el 16% respondió Paloma. Fajardo solo tiene 2.8% de rechazo — 6 veces menos. Fajardo es el candidato con menor rechazo del país. #FajardoEnPrimera',link:null,ph:true},
+
+/* ══ PROGRESISTA · EX-PETRISTA ══ */
+{id:'pr-desencanto',ico:'😤',t:'Chao a las cosas desastrosas de este gobierno',s:'Lo moviliza: el desencanto con Petro',p:['prog','prog-decep'],moviliza:'😤 Lo moviliza: el desencanto con Petro',msg:'Chao a todas las cosas desastrosas de este gobierno. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYuVY0Rg-T5/'},
+{id:'pr-debates',ico:'🗳️',t:'Cepeda no va a debates',s:'Lo moviliza: la democracia',p:['prog','prog-decep'],moviliza:'🗳️ Lo moviliza: la democracia',msg:'¿Va a votar con el que no va a debates? Solo porque es el que dijo Petro. Lo más antidemocrático. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYXelbVgaT9/'},
+{id:'pr-empeorar',ico:'📉',t:'Las cosas pueden empeorar con Cepeda',s:'Lo moviliza: que puede empeorar',p:['prog','prog-decep'],moviliza:'📉 Lo moviliza: que puede empeorar',msg:'¿Le parece que las cosas van mal? Esto puede empeorar, especialmente si Cepeda ni se atreve a ir a un debate. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYXelbVgaT9/'},
+{id:'pr-transparencia',ico:'🤐',t:'Cepeda no reporta gastos de campaña',s:'Lo moviliza: la transparencia',p:['prog','prog-decep'],moviliza:'🤐 Lo moviliza: la transparencia',msg:'¿Cómo es posible que un candidato ni siquiera reporte los gastos de campaña, y no pase nada? #FajardoEnPrimera',link:'https://www.instagram.com/p/DYFMLgLgvUw/'},
+{id:'pr-cafe',ico:'☕',t:'Café con Andrés Simón',s:'Lo moviliza: reconectar emocionalmente',p:['prog','prog-decep'],moviliza:'☕ Lo moviliza: reconectar emocionalmente',msg:'Una conversación honesta sobre el cambio real que Colombia necesita. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY5nmf_IWmd/'},
+{id:'pr-corrupcion-petro',ico:'💸',t:'Corrupción Petro: UNGRD y chatarreras',s:'Lo moviliza: corrupción Petro específica',p:['prog','prog-decep'],moviliza:'💸 Lo moviliza: corrupción Petro específica',msg:'Los escándalos de la UNGRD, las chatarreras, los carrotanques — recursos que debían llegar a los más pobres, desviados. La corrupción de este gobierno ha sido igual o peor que los que criticaban. #FajardoEnPrimera',link:null,ph:true},
+{id:'pr-parques',ico:'🏘️',t:'Parques Biblioteca donde había combates',s:'Lo moviliza: Fajardo ya lo hizo',p:['prog','prog-decep','prog-joven'],moviliza:'🏘️ Lo moviliza: Fajardo ya lo hizo',msg:'En los barrios más pobres y violentos de Medellín — donde el Estado nunca había llegado — Fajardo construyó Parques Biblioteca, colegios de calidad, centros culturales. Eso no es tibio. Eso es transformación real. #FajardoEnPrimera',link:null,ph:true},
+
+/* ══ PROGRESISTA · JOVEN IDEALISTA ══ */
+{id:'pj-empleo1',ico:'💼',t:'Empleo para jóvenes — propuestas',s:'Lo moviliza: el empleo juvenil',p:['prog','prog-joven'],moviliza:'💼 Lo moviliza: el empleo juvenil',msg:'Estas son algunas de las medidas que tomaremos para mejorar el empleo en Colombia. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYfj21tpKpj/'},
+{id:'pj-criminalidad',ico:'🚫',t:'Jóvenes: oportunidades para no entrar a la criminalidad',s:'Lo moviliza: sacar jóvenes de la criminalidad',p:['prog','prog-joven'],moviliza:'🚫 Lo moviliza: sacar jóvenes de la criminalidad',msg:'Todos los días Colombia está perdiendo jóvenes en el mundo criminal. No podemos olvidarlos. Tenemos que darles oportunidades, educación y empleo para que tengan otra alternativa. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYM-bxJAaCm/'},
+{id:'pj-irreverente',ico:'💛',t:'Fajardo deja de coquetearme',s:'Lo moviliza: identidad / irreverencia',p:['prog','prog-joven'],moviliza:'💛 Lo moviliza: identidad / irreverencia',msg:'Fajardo deja de coquetearme. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY3E5uYy4-7/'},
+{id:'pj-rafa',ico:'🎤',t:'Apoyo Rafa Solano',s:'Lo moviliza: influencer que admira',p:['prog','prog-joven','abs'],moviliza:'🎤 Lo moviliza: influencer que admira',msg:'Rafa Solano apoya a Fajardo. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY3NM2fCQ4g/'},
+{id:'pj-viral',ico:'📱',t:'Contenido viral para jóvenes',s:'Lo moviliza: algo viral en su idioma',p:['prog','prog-joven','abs'],moviliza:'📱 Lo moviliza: algo viral en su idioma',msg:'',link:null,ph:true},
+
+/* ══ ABSTENCIONISTA · GENERAL ══ */
+{id:'abs-voto',ico:'🗳️',t:'Votar por convicción no es botar el voto',s:'Lo moviliza: el voto útil',p:['abs','todas'],moviliza:'🗳️ Lo moviliza: el voto útil',msg:'Votar por convicción no es botar el voto. Todavía hay tiempo. Juntos llegaremos a la segunda vuelta y después a la presidencia. #FajardoEnPrimera #HayTiempo',link:'https://www.instagram.com/p/DYz4Azkxn4s/'},
+{id:'abs-humo',ico:'🤥',t:'¿Te están vendiendo humo?',s:'Lo moviliza: que no le mientan',p:['abs','todas'],moviliza:'🤥 Lo moviliza: que no le mientan',msg:'¿Te están vendiendo humo? Si te están prometiendo que van a bajar los impuestos, lamento decirte que te están mintiendo de frente. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYm-9zfxMIz/'},
+{id:'abs-secreto',ico:'🤫',t:'Mi voto es secreto',s:'Lo moviliza: el miedo a votar diferente',p:['abs','todas'],moviliza:'🤫 Lo moviliza: el miedo a votar diferente',msg:'Mi voto es secreto. Voto por convicción. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY2AxnPpiqk/'},
+{id:'abs-orgullo',ico:'🇨🇴',t:'Voté por lo mejor para Colombia',s:'Lo moviliza: orgullo de votar',p:['abs','todas'],moviliza:'🇨🇴 Lo moviliza: orgullo de votar',msg:'Voté por lo mejor para Colombia. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY442sWAlfB/'},
+
+/* ══ ABSTENCIONISTA · MUJER PRAGMÁTICA ══ */
+{id:'abs-seguridad',ico:'🔒',t:'Plan Guardián: seguridad para los ciudadanos',s:'Lo moviliza: la seguridad del barrio',p:['abs','abs-mujer'],moviliza:'🔒 Lo moviliza: la seguridad del barrio',msg:'La autoridad del Estado se respeta. A los ciudadanos se les protege. A los criminales se les enfrenta. Con el Plan Guardián vamos a recuperar la seguridad. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYlNc1BNzaj/'},
+{id:'abs-eps',ico:'🏥',t:'Vamos a salvar la Nueva EPS',s:'Lo moviliza: la EPS',p:['abs','abs-mujer'],moviliza:'🏥 Lo moviliza: la EPS',msg:'Vamos a salvar la Nueva EPS y el FOMAG. Vamos a construir un nuevo orden en el sistema de salud, en el que no quepan los corruptos que se han robado la plata de los colombianos. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYizkCFt_Yy/'},
+
+/* ══ ABSTENCIONISTA · JOVEN ══ */
+{id:'abs-suso',ico:'😂',t:'Apoyo Dany Alejandro Hoyos "Suso"',s:'Lo moviliza: humor / cultura popular',p:['abs','abs-joven'],moviliza:'😂 Lo moviliza: humor / cultura popular',msg:'Suso apoya a Fajardo. Cuando hasta el más pila del parche vota, algo grande está pasando. #FajardoEnPrimera',link:'https://www.instagram.com/stories/venga.hablemos/3907313842967436457'},
+{id:'abs-joven-viral',ico:'📱',t:'Contenido viral jóvenes',s:'Lo moviliza: algo viral corto',p:['abs','abs-joven'],moviliza:'📱 Lo moviliza: algo viral corto',msg:'',link:null,ph:true},
+
+/* ══ ABSTENCIONISTA · ADULTO RESIGNADO ══ */
+{id:'abs-empleo1',ico:'💼',t:'Empleo para adultos — propuestas',s:'Lo moviliza: el empleo',p:['abs','abs-mayor'],moviliza:'💼 Lo moviliza: el empleo',msg:'Estas son nuestras propuestas para mejorar el empleo en Colombia. #FajardoEnPrimera',link:'https://www.instagram.com/p/DYNSS_jRC50/'},
+{id:'abs-manos',ico:'⚖️',t:'20 años sin una investigación por corrupción',s:'Lo moviliza: manos limpias',p:['abs','abs-mayor','todas'],moviliza:'⚖️ Lo moviliza: manos limpias',msg:'Alcalde de Medellín, Gobernador de Antioquia, 3 veces candidato presidencial. Cero investigaciones por corrupción en 20 años de vida pública. Sus finanzas son públicas y verificables. #FajardoEnPrimera',link:null,ph:true},
+
+/* ══ INSPIRADORES — CUALQUIER PERFIL ══ */
+{id:'insp-coquetear',ico:'💛',t:'Fajardo deja de coquetearme',s:'Genera curiosidad — celebridad apoya',p:['todas'],moviliza:'💛 Genera curiosidad',msg:'Fajardo deja de coquetearme. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY3E5uYy4-7/'},
+{id:'insp-secreto',ico:'🤫',t:'Mi voto es secreto',s:'Rompe el miedo a votar diferente',p:['todas'],moviliza:'🤫 Rompe el miedo a votar diferente',msg:'Mi voto es secreto. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY2AxnPpiqk/'},
+{id:'insp-rafa',ico:'🎤',t:'Apoyo Rafa Solano',s:'Influencer — credibilidad en jóvenes',p:['todas'],moviliza:'🎤 Influencer que admira',msg:'Rafa Solano apoya a Fajardo. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY3NM2fCQ4g/'},
+{id:'insp-cafe',ico:'☕',t:'Café con Andrés Simón',s:'Tono cercano y conversacional',p:['todas'],moviliza:'☕ Tono cercano',msg:'Una conversación honesta sobre el cambio real. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY5nmf_IWmd/'},
+{id:'insp-colombia',ico:'🇨🇴',t:'Voté por lo mejor para Colombia',s:'Activa el orgullo de votar',p:['todas'],moviliza:'🇨🇴 Orgullo de votar',msg:'Voté por lo mejor para Colombia. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY442sWAlfB/'},
+{id:'insp-suso',ico:'😂',t:'Apoyo Dany Alejandro Hoyos "Suso"',s:'Humor / cultura popular',p:['todas'],moviliza:'😂 Humor que conecta',msg:'Suso apoya a Fajardo. #FajardoEnPrimera',link:'https://www.instagram.com/stories/venga.hablemos/3907313842967436457'},
+{id:'insp-premio1',ico:'🏆',t:'Un Premio para Fajardo',s:'Credibilidad con resultados',p:['todas'],moviliza:'🏆 Resultados comprobados',msg:'Los premios no se piden — se ganan con gestión. Fajardo los tiene. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DY3NRsEMaun/'},
+{id:'insp-premio2',ico:'🏆',t:'Otro Premio para Fajardo',s:'Credibilidad con resultados (2)',p:['todas'],moviliza:'🏆 Resultados comprobados',msg:'Fajardo tiene el historial de logros más sólido. #FajardoEnPrimera',link:'https://www.instagram.com/reel/DYzbEcfuOtt/'}
 ];
+
 var navStack=[],curScreen='setup',curPerfil='',starVal=0,contacts=[],volNombre='',sesMuni='',sesBarrio='';
 
 function $(id){return document.getElementById(id);}
@@ -678,6 +745,13 @@ async function fetchContactsFromDB() {
     updateCnt();
   }
 }
+//////////////////////////////////////
+
+
+/////////////////////////////////////
+
+
+
 
 function iniciar(){curPerfil='';starVal=0;resetForm();setBnav('conv');goto('s1');}
 function setP(p){curPerfil=p;var el=$('cap-perfil');if(el)el.value=p;}
@@ -761,17 +835,130 @@ function renderConts(){
   lista.innerHTML=contacts.map(function(c){return '<div class="contact-item '+(c.caliente?'hot':'warm')+'"><div class="c-name">'+c.nombre+' '+(c.caliente?'🔥':'')+'</div><div class="c-meta">'+(c.municipio||'')+(c.barrio?' · '+c.barrio:'')+' · '+c.hora+' '+c.fecha+(c.tel?' · '+c.tel:'')+'</div><div class="c-tags">'+(c.perfil?'<span class="ctag y">'+c.perfil.substring(0,28)+'</span>':'')+' '+(c.caliente?'<span class="ctag g">Caliente</span>':'<span class="ctag r">Tibio</span>')+' '+(c.synced?'<span class="ctag g" style="background:transparent;border:1px solid #5EC48A">☁️ Ok</span>':'')+'</div></div>';}).join('');
 }
 
-function renderRec(){
-  var filtros=[{k:'todas',l:'Todos'},{k:'anti',l:'⚡ Anti-Cepeda'},{k:'prog',l:'✊ Progresista'},{k:'abs',l:'😶 Abstencionista'},{k:'evento',l:'📅 Eventos'}];
-  $('rfiltros').innerHTML=filtros.map(function(f,i){return '<button style="padding:.32rem .75rem;font-size:var(--fsxs);font-weight:700;text-transform:uppercase;border-radius:20px;border:1px solid '+(i===0?'var(--Y)':'var(--T3)')+';color:'+(i===0?'var(--B)':'var(--T2)')+';background:'+(i===0?'var(--Y)':'transparent')+';touch-action:manipulation" onclick="filtrarRec(\''+f.k+'\',this)">'+f.l+'</button>';}).join('');
-  
-  $('rlista').innerHTML=RECURSOS.map(function(r){
-    var copyBtn = !r.ph ? '<button class="hbtn" style="width:100%; margin-top:10px; font-weight:bold; color:var(--Y); border-color:rgba(245,197,24,0.3); background:rgba(245,197,24,0.05)" onclick="event.stopPropagation(); copiar(\''+r.msg+'\'); toast(\'✅ Texto copiado al portapapeles\')">📋 COPIAR TEXTO</button>' : '';
-    return '<div class="rec'+(r.ph?' ph':'')+'" data-tipo="'+r.tipo+'" data-p="'+r.p.join(',')+'" onclick="'+(r.ph?"toast('Disponible mañana')":'compartir(\''+r.id+'\'')+'" style="margin-bottom:.5rem; display:block;"><div style="display:flex; align-items:center; gap:.75rem"><div class="rec-ico">'+r.ico+'</div><div><div class="rec-t">'+r.t+(r.ph?'<span class="rbadge">PRÓXIMAMENTE</span>':'')+'</div><div class="rec-s">'+r.s+'</div></div></div>' + copyBtn + '</div>';
+// Funciones para manejar los botones estáticos que insertaste
+function abrirLinkBtn(btn) {
+  var url = btn.getAttribute('data-link');
+  if(url) window.open(url, '_blank');
+}
+
+function copiarMsgBtn(btn) {
+  // Extraemos el texto en cursiva que pusiste en el HTML
+  var textDiv = btn.parentElement.parentElement.querySelector('div:nth-child(3)');
+  if(textDiv) {
+    copiar(textDiv.innerText);
+    toast('✅ Texto copiado al portapapeles');
+  }
+}
+
+// --- FUNCIONES DE RECURSOS, FILTROS Y SUPABASE ---
+
+function renderRec(filtro) {
+  filtro = filtro || 'todas';
+  var lista = document.getElementById('rlista');
+  if (!lista) return;
+
+  // 1. Si presionan el botón de Videos, llamamos a Supabase
+  if (filtro === 'videos-descargar') {
+    lista.innerHTML = '';
+    cargarVideosSupabase();
+    return;
+  }
+
+  // 2. Filtrar el arreglo RECURSOS según la categoría seleccionada
+  var recs = RECURSOS.filter(function(r) {
+    return filtro === 'todas' || (r.p && r.p.indexOf(filtro) >= 0);
+  });
+
+  if (!recs.length) {
+    lista.innerHTML = '<div style="text-align:center;padding:2rem;color:var(--T2)">No hay recursos en esta categoría.</div>';
+    return;
+  }
+
+  // 3. Dibujar las tarjetas dinámicamente
+  lista.innerHTML = recs.map(function(r) {
+    var style = r.ph ? 'border:1px solid rgba(192,57,43,.25)' : 'border:1px solid var(--T3)';
+    var titleColor = r.ph ? 'color:rgba(192,57,43,.8)' : 'color:var(--W)';
+    var badge = r.ph ? ' <span class="rbadge">PRÓXIMAMENTE</span>' : '';
+
+    var btnHtml = '';
+    if (!r.ph) {
+      btnHtml = `
+        <div style="display:flex;gap:.4rem;margin-top:.6rem">
+          <button data-link="${r.link}" onclick="abrirLinkBtn(this)" style="flex:1;background:var(--BC);color:var(--W);border:none;border-radius:6px;padding:.4rem .5rem;font-size:.65rem;font-weight:700;text-transform:uppercase;touch-action:manipulation">🔗 Abrir</button>
+          <button onclick="copiarMsgSolo('${r.id}')" style="flex:1;background:var(--Y);color:var(--B);border:none;border-radius:6px;padding:.4rem .5rem;font-size:.65rem;font-weight:700;text-transform:uppercase;touch-action:manipulation">📋 Copiar</button>
+        </div>`;
+    }
+
+    var textHtml = (!r.ph && r.msg) ? `<div style="font-size:.72rem;color:var(--T2);margin-top:.25rem;font-style:italic;line-height:1.4">${r.msg.substring(0, 85)}...</div>` : '';
+
+    return `
+    <div style="background:var(--BM);border-radius:10px;padding:.85rem;margin-bottom:.55rem;${style}">
+      <div style="display:flex;align-items:flex-start;gap:.65rem">
+        <span style="font-size:1.4rem;flex-shrink:0">${r.ico}</span>
+        <div style="flex:1">
+          <div style="font-weight:700;font-size:.85rem;${titleColor}">${r.t}${badge}</div>
+          <div style="font-size:.7rem;color:var(--Y);margin-top:.15rem;font-weight:600">${r.moviliza || ''}</div>
+          ${textHtml}
+          ${btnHtml}
+        </div>
+      </div>
+    </div>`;
   }).join('');
 }
 
-function filtrarRec(key,btn){var bs=document.querySelectorAll('#rfiltros button');for(var i=0;i<bs.length;i++){bs[i].style.background='transparent';bs[i].style.color='var(--T2)';bs[i].style.borderColor='var(--T3)';}btn.style.background='var(--Y)';btn.style.color='var(--B)';btn.style.borderColor='var(--Y)';var items=document.querySelectorAll('#rlista .rec');for(var i=0;i<items.length;i++){var p=items[i].dataset.p||'';var t=items[i].dataset.tipo||'';items[i].style.display=(key==='todas'||p.indexOf(key)>=0||t===key)?'':'none';}}
+function filtrarRecBtn(btn) {
+  var key = btn.getAttribute('data-key');
+  
+  // Cambiar el estado visual de los botones
+  var bs = document.querySelectorAll('#rfiltros button');
+  for (var i = 0; i < bs.length; i++) {
+    bs[i].style.background = 'transparent';
+    bs[i].style.color = 'rgba(255,255,255,.5)';
+    bs[i].style.borderColor = 'rgba(255,255,255,.13)';
+  }
+  btn.style.background = 'var(--Y)';
+  btn.style.color = 'var(--B)';
+  btn.style.borderColor = 'var(--Y)';
+
+  // Re-dibujar la lista usando el filtro
+  renderRec(key);
+}
+
+function copiarMsgSolo(id) {
+  var r = RECURSOS.filter(function(x) { return x.id === id; })[0];
+  if (r && r.msg) {
+    copiar(r.msg);
+    toast('✅ Texto copiado al portapapeles');
+  }
+}
+
+async function cargarVideosSupabase() {
+  toast('Cargando videos...');
+  var lista = document.getElementById('rlista');
+  
+  const { data, error } = await _supabase.from('videos').select('*').order('created_at', { ascending: false });
+  
+  if (error || !data || data.length === 0) {
+    lista.innerHTML = '<div style="text-align:center;padding:2rem;color:rgba(255,255,255,.3)">No hay videos disponibles aún.</div>';
+    return;
+  }
+  
+  lista.innerHTML = data.map(function(v) {
+    return `
+      <div class="vid-supa" style="background:var(--BM);border-radius:10px;padding:.85rem;margin-bottom:.55rem;border:1px solid var(--Y)">
+        <div style="display:flex;align-items:flex-start;gap:.65rem">
+          <span style="font-size:1.4rem;flex-shrink:0">📥</span>
+          <div style="flex:1">
+            <div style="font-weight:700;font-size:.85rem;color:var(--W)">${v.titulo}</div>
+            <div style="font-size:.72rem;color:var(--T2);margin-top:.25rem;font-style:italic;line-height:1.4">${v.descripcion || ''}</div>
+            <div style="display:flex;gap:.4rem;margin-top:.6rem">
+              <button onclick="window.open('${v.url_descarga}', '_blank')" style="flex:1;background:var(--Y);color:var(--B);border:none;border-radius:6px;padding:.4rem .5rem;font-size:.65rem;font-weight:700;text-transform:uppercase;touch-action:manipulation">🔗 Descargar MP4</button>
+            </div>
+          </div>
+        </div>
+      </div>`;
+  }).join('');
+}
 function compartir(id){var r=RECURSOS.filter(function(x){return x.id===id;})[0];if(!r||!r.msg){toast('📌 Recurso disponible pronto');return;}if(r.link)window.open(r.link,'_blank');copiar(r.msg);toast('✅ Mensaje copiado — pégalo en WhatsApp');}
 function copiar(txt){if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(txt).catch(function(){cf(txt);});}else{cf(txt);}}
 function cf(txt){var ta=document.createElement('textarea');ta.value=txt;ta.style.cssText='position:fixed;top:0;left:0;opacity:0;width:1px;height:1px;';document.body.appendChild(ta);ta.focus();ta.select();try{document.execCommand('copy');}catch(e){}document.body.removeChild(ta);}
